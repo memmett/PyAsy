@@ -1,0 +1,29 @@
+# version
+__version__.py
+__git_version__.py
+
+# backup files
+*~
+
+# compiled python and shared objects
+*.pyc
+*.pyo
+
+# setuptools
+build
+dist
+PyAsy*
+
+# examples
+*.pdf
+*.dat
+
+# tex
+*.aux
+*.log
+*.out
+
+# sphinx
+_build
+_doctrees
+_ghpages
