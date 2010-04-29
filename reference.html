@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PyAsy Reference &mdash; PyAsy v0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyAsy v0.1.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li><a href="index.html">PyAsy v0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pyasy-reference">
+<h1>PyAsy Reference<a class="headerlink" href="#pyasy-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pyasy-class">
+<h2>PyAsy class<a class="headerlink" href="#pyasy-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyasy.plot.Plot">
+<em class="property">
+class </em><tt class="descclassname">pyasy.plot.</tt><tt class="descname">Plot</tt><big>(</big><em>xlims=None</em>, <em>size=(4</em>, <em>4</em>, <em>False)</em>, <em>defaultpen=None</em>, <em>plotpen=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>PyAsy Asymptote wrapper.</p>
+<p><strong>Basic usage</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyasy.plot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">101</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mf">2</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot</span> <span class="o">=</span> <span class="n">pyasy</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">Plot</span><span class="p">(</span><span class="n">xlims</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="bp">False</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s">&#39;some plot&#39;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s">&#39;$x$&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">&#39;$y$&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot</span><span class="o">.</span><span class="n">shipout</span><span class="p">(</span><span class="s">&#39;x_squared&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Sending Asymptote commands</strong></p>
+<p>You can send commands directly to the Asymptote engine by, eg:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">plot</span><span class="o">.</span><span class="n">asy</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&#39;real x = 1.0&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><p class="first"><em>xlims</em> - Sets the default xlimits ([xmin, xmax]).</p>
+</li>
+<li><dl class="first docutils">
+<dt><em>size</em> - Sets the default size of the plot.  This is a tuple</dt>
+<dd><p class="first last">of the form (width, height, aspect).  The <em>width</em>
+and <em>height</em> are in inches.  The <em>aspect</em> is boolean
+and corresponds to Asymptotes&#8217; IgnoreAspect.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first"><em>defaultpen</em> - Sets the default pen.</p>
+</li>
+<li><dl class="first docutils">
+<dt><em>plotpen</em> - Sets the plot pen (used when drawing lines and</dt>
+<dd><p class="first last">dots in the plots, but not for axis etc).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Any other keyword arugments are passed on to the
+pyasy.asymptote.Asymptote constructor.</p>
+<p><strong>Methods</strong></p>
+<dl class="method">
+<dt id="pyasy.plot.Plot.axis">
+<tt class="descname">axis</tt><big>(</big><em>title=''</em>, <em>xlabel='$x$'</em>, <em>ylabel=''</em>, <em>ylims=None</em>, <em>nxtics=None</em>, <em>nytics=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Label the current plot and axis.</p>
+<p><strong>Arguments</strong></p>
+<p>XXX</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyasy.plot.Plot.caption">
+<tt class="descname">caption</tt><big>(</big><em>caption=''</em>, <em>label=''</em>, <em>includegraphics_options=''</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.caption" title="Permalink to this definition">¶</a></dt>
+<dd>Set caption used for TeX export.</dd></dl>
+
+<dl class="method">
+<dt id="pyasy.plot.Plot.horizontal_line">
+<tt class="descname">horizontal_line</tt><big>(</big><em>y=0.0</em>, <em>pen='plotpen+dotted'</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.horizontal_line" title="Permalink to this definition">¶</a></dt>
+<dd>Draw a horizontal line at <em>y</em> on the graph.</dd></dl>
+
+<dl class="method">
+<dt id="pyasy.plot.Plot.line">
+<tt class="descname">line</tt><big>(</big><em>x</em>, <em>y</em>, <em>pen=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.line" title="Permalink to this definition">¶</a></dt>
+<dd>Line plot of <em>y</em> vs <em>x</em> (1d arrays).</dd></dl>
+
+<dl class="method">
+<dt id="pyasy.plot.Plot.new_plot">
+<tt class="descname">new_plot</tt><big>(</big><em>size=(6</em>, <em>2</em>, <em>False)</em>, <em>shift=(0</em>, <em>0)</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.new_plot" title="Permalink to this definition">¶</a></dt>
+<dd>Create a new subplot.</dd></dl>
+
+<dl class="method">
+<dt id="pyasy.plot.Plot.scatter">
+<tt class="descname">scatter</tt><big>(</big><em>x</em>, <em>y</em>, <em>pen=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.scatter" title="Permalink to this definition">¶</a></dt>
+<dd>Scatter plot of <em>y</em> vs <em>x</em> (1d arrays).</dd></dl>
+
+<dl class="method">
+<dt id="pyasy.plot.Plot.shipout">
+<tt class="descname">shipout</tt><big>(</big><em>basename='plot'</em>, <em>format='pdf'</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.shipout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shipout the current plot(s).</p>
+<p>The current plot(s) is rendered and output to the file
+<em>basename</em>.*format* (eg, &#8216;plot.pdf&#8217;).</p>
+<p>If a caption was set, the LaTeX commands for including and
+annotating the plot are output to <em>basename</em>.tex.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="asymptote-class">
+<h2>Asymptote class<a class="headerlink" href="#asymptote-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyasy.asymptote.Asymptote">
+<em class="property">
+class </em><tt class="descclassname">pyasy.asymptote.</tt><tt class="descname">Asymptote</tt><big>(</big><em>echo=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.asymptote.Asymptote" title="Permalink to this definition">¶</a></dt>
+<dd><p>PyAsy Asymptote class (used to communicate with an Asymptote
+subprocess).</p>
+<p>Usually this is class is instantiated by the PyAsy Plot class,
+but you may use it directly if required.</p>
+<p>You can send commands directly to the Asymptote engine by, eg:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">plot</span><span class="o">.</span><span class="n">asy</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&#39;real x = 1.0&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><dl class="first docutils">
+<dt><em>echo</em> - If True, Asymptote commands are echoed to stdout as</dt>
+<dd><p class="first last">they are sent to the Asymptote engine (useful for
+debugging).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="method">
+<dt id="pyasy.asymptote.Asymptote.send">
+<tt class="descname">send</tt><big>(</big><em>cmd</em><big>)</big><a class="headerlink" href="#pyasy.asymptote.Asymptote.send" title="Permalink to this definition">¶</a></dt>
+<dd>Send a command to the Asymptote engine.</dd></dl>
+
+<dl class="method">
+<dt id="pyasy.asymptote.Asymptote.slurp">
+<tt class="descname">slurp</tt><big>(</big><em>slurp</em><big>)</big><a class="headerlink" href="#pyasy.asymptote.Asymptote.slurp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instruct Asymptote to read the data stored in the
+(temporary) file <em>slurp</em>.</p>
+<p>The slurpped data is stored, in Asymptote, in the 2d <tt class="docutils literal"><span class="pre">xq</span></tt>
+array.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyasy.version">
+<h2>Version information<a class="headerlink" href="#module-pyasy.version" title="Permalink to this headline">¶</a></h2>
+<p>PyAsy version information.</p>
+<p>To obtain the version of PyAsy:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyasy.version</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pyasy</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">version</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pyasy</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">git_version</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">PyAsy Reference</a><ul>
+<li><a class="reference external" href="#pyasy-class">PyAsy class</a></li>
+<li><a class="reference external" href="#asymptote-class">Asymptote class</a></li>
+<li><a class="reference external" href="#module-pyasy.version">Version information</a></li>
+</ul>
+</li>
+</ul>
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/reference.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">PyAsy v0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Matthew Emmett.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.2.
+    </div>
+  </body>
+</html>
