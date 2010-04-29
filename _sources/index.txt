@@ -2,15 +2,16 @@ PyAsy
 =====
 
 PyAsy is a Python wrapper of the Asymptote_ vector graphics language.
+In short: Python + NumPy + Asymptote = PyAsy.
 
 **News**
 
 * April 29 2010: PyAsy version 0.1.0 released.
 
-PyAsy uses `semantic versioning`_.
-
 Please check out the documentation (below) or the `PyAsy project
 page`_ for more infomation about using and contributing to PyAsy.
+
+PyAsy uses `semantic versioning`_.
 
 
 Documentation
