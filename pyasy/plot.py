@@ -1,15 +1,10 @@
 """PyAsy Plot object."""
 
-import asymptote
 
-import os
-import math
 import struct
+import textwrap
 
-import h5py
-import numpy as np
-
-from textwrap import dedent
+import asymptote
 
 
 ######################################################################
@@ -325,7 +320,7 @@ class Plot(object):
             options = self.includegraphics_options
 
             f = open('%s.tex' % (basename), 'w')
-            f.write(dedent(
+            f.write(textwrap.dedent(
                 '''\
                 \\begin{figure}
                   \\centering
