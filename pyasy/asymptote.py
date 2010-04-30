@@ -16,8 +16,11 @@ class Asymptote(object):
        **Arguments**
 
        * *echo* - If True, Asymptote commands are echoed to stdout as
-                  they are sent to the Asymptote engine (useful for
-                  debugging).
+         they are sent to the Asymptote engine (useful for debugging).
+         (This can be enable later by setting the *echo* instance
+         variable.)
+
+       **Methods**
 
        """
 
@@ -43,7 +46,8 @@ class Asymptote(object):
 
 
     def send(self, cmd):
-        """Send a command to the Asymptote engine."""
+        """Send a command to the Asymptote engine.  A trailing
+           semicolon is added automatically."""
         if self.echo:
             print cmd
 

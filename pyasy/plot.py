@@ -21,10 +21,10 @@ class Plot(object):
 
        >>> import pyasy.plot
        >>> import numpy
-       >>>
+
        >>> x = numpy.linspace(-10.0, 20.0, 101)
        >>> y = x**2
-       >>>
+
        >>> plot = pyasy.plot.Plot(xlims=[0.0, 10.0], size=(2,3,False))
        >>> plot.line(x, y)
        >>> plot.axis(title='some plot', xlabel='$x$', ylabel='$y$')
@@ -36,19 +36,31 @@ class Plot(object):
 
        >>> plot.asy.send('real x = 1.0')
 
+       **Debugging**
+
+       To aid in debugging, you can echo all commands sent to the
+       Asymptote engine by either::
+
+       >>> plot = pyasy.plot.Plot(echo=True)
+
+       or::
+
+       >>> plot.asy.echo = True
+
        **Arguments**
 
        * *xlims* - Sets the default xlimits ([xmin, xmax]).
 
        * *size* - Sets the default size of the plot.  This is a tuple
-                  of the form (width, height, aspect).  The *width*
-                  and *height* are in inches.  The *aspect* is boolean
-                  and corresponds to Asymptotes' IgnoreAspect.
+         of the form ``(width, height, keep_aspect)``.  The *width*
+         and *height* are in inches.  The boolean *keep_aspect*
+         determines if the x and y aspects are to be kept equal
+         (``True``) or not (``False``).
 
        * *defaultpen* - Sets the default pen.
 
        * *plotpen* - Sets the plot pen (used when drawing lines and
-                     dots in the plots, but not for axis etc).
+         dots in the plots, but not for axis etc).
 
        Any other keyword arugments are passed on to the
        pyasy.asymptote.Asymptote constructor.
@@ -101,7 +113,17 @@ class Plot(object):
 
            **Arguments**
 
-           XXX
+           * *title* - Plot title.
+
+           * *xlabel* - x-axis label.
+
+           * *ylabel* - y-axis label.
+
+           * *nxtics* - Tuple ``(N, n)`` containing the number of
+             major (N) and minor (n) x-axis ticks.
+
+           * *nytics* - Tuple ``(N, n)`` containing the number of
+             major (N) and minor (n) y-axis ticks.
 
            """
 
@@ -171,7 +193,8 @@ class Plot(object):
     ##################################################################
 
     def scatter(self, x, y, pen=None, **kwargs):
-        """Scatter plot of *y* vs *x* (1d arrays)."""
+        """Scatter plot of *y* vs *x* (both of which should be 1d
+           ndarrays)."""
 
         asy = self.asy
 
@@ -203,7 +226,8 @@ class Plot(object):
     ##################################################################
 
     def line(self, x, y, pen=None, **kwargs):
-        """Line plot of *y* vs *x* (1d arrays)."""
+        """Line plot of *y* vs *x* (both of which should be 1d
+           ndarrays)."""
 
         asy = self.asy
 
@@ -247,7 +271,7 @@ class Plot(object):
 
     def caption(self, caption='', label='',
                 includegraphics_options=''):
-        """Set caption used for TeX export."""
+        """Set caption used for LaTeX export (see *shipout* method)."""
 
         self.caption = caption
         self.label = label
@@ -271,10 +295,11 @@ class Plot(object):
         """Shipout the current plot(s).
 
            The current plot(s) is rendered and output to the file
-           *basename*.*format* (eg, 'plot.pdf').
+           *basename.format* (eg, ``plot.pdf``).
 
            If a caption was set, the LaTeX commands for including and
-           annotating the plot are output to *basename*.tex.
+           annotating the plot (in a LaTeX *figure* environment) are
+           output to *basename*.tex (eg, ``plot.tex``).
 
            """
 
