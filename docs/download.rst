@@ -14,7 +14,7 @@ format.  You can also obtain the source code on GitHub through the
   $ git clone git://github.com/memmett/PyAsy
 
 Once you have downloaded and unpacked the source package, you can
-install PyWENO by simply running::
+install PyAsy by simply running::
 
   $ python setup.py install
 
