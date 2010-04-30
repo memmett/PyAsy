@@ -8,8 +8,8 @@ pyasy.plot.Plot.line method reference.html
 pyasy.plot.Plot class reference.html
 pyasy.asymptote.Asymptote.send method reference.html
 pyasy.plot.Plot.axis method reference.html
-pyasy.plot.Plot.scatter method reference.html
+pyasy.asymptote.Asymptote class reference.html
 pyasy.asymptote.Asymptote.slurp method reference.html
 pyasy.plot.Plot.caption method reference.html
-pyasy.asymptote.Asymptote class reference.html
+pyasy.plot.Plot.scatter method reference.html
 pyasy.plot.Plot.horizontal_line method reference.html
