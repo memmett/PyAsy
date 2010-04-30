@@ -4,7 +4,11 @@ import glob
 import os
 import re
 
-import setuptools
+try:
+    from setuptools import setup
+except:
+    from distutils.core import setup
+
 
 ######################################################################
 # version
@@ -49,15 +53,12 @@ f.close()
 ######################################################################
 # setup!
 
-setuptools.setup(
+setup(
 
     name = "PyAsy",
     version = version,
     packages = ['pyasy'],
     zip_safe = False,
-
-#    test_suite = 'nose.collector',
-#    install_requires = [ "numpy >= 1.0.3", "scipy >= 0.7.0" ], # , "sympy >= 0.6.0" ],
 
     package_data = {'': ['__version__.py', '__git_version__.py']},
     exclude_package_data = {'': ['.gitignore']},

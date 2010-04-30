@@ -9,7 +9,8 @@ __git_version__.py
 *.pyc
 *.pyo
 
-# setuptools
+# setuptools, distutils
+MANIFEST
 build
 dist
 PyAsy*
