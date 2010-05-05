@@ -25,6 +25,18 @@ class Plot(object):
        >>> plot.axis(title='some plot', xlabel='$x$', ylabel='$y$')
        >>> plot.shipout('x_squared')
 
+       You can use a different pen by, eg,
+
+       >>> plot.line(x, y, 'red+dashed')
+
+       or
+
+       >>> plot.line(x, y, ['red', 'dashed'])
+
+       or
+
+       >>> plot.line(x, y, pen=['red', 'dashed'])
+
        **Sending Asymptote commands**
 
        You can send commands directly to the Asymptote engine by, eg::
@@ -260,6 +272,16 @@ class Plot(object):
         self.asy.send('real x2 = %lf' % self.xlims[1])
         self.asy.send('xaxis(%s, YEquals(%lf, false), x1, x2, %s)'
                       % (picture, y, pen))
+
+
+    ##################################################################
+
+    def vertical_line(self, x=0.0, pen='plotpen+dotted', **kwargs):
+        """Draw a vertical line at *x* on the graph."""
+
+        picture = 'p%d' % (self.picture)
+        self.asy.send('yaxis(%s, XEquals(%lf, false), %s)'
+                      % (picture, x, pen))
 
 
     ##################################################################
