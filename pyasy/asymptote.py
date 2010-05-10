@@ -1,5 +1,6 @@
 """PyAsy Asymptote class."""
 
+import struct
 import subprocess
 
 class Asymptote(object):
@@ -29,13 +30,13 @@ class Asymptote(object):
 
                      int N = dat;
 
-                     real[][] xq = new real[N][N];
-                     xq[0][:] = dimension(dat, N);
-                     xq[1][:] = dimension(dat, N);
+                     real[][] xy = new real[N][N];
+                     xy[0][:] = dimension(dat, N);
+                     xy[1][:] = dimension(dat, N);
 
                      close(dat);
 
-                     return xq;
+                     return xy;
                    }"""
 
 
@@ -43,6 +44,8 @@ class Asymptote(object):
         self.echo = echo
         self.open()
         self.send(self.asy_slurp)
+
+        self.count = 0
 
 
     def send(self, cmd):
@@ -55,17 +58,26 @@ class Asymptote(object):
         self.session.stdin.flush()
 
 
-    def slurp(self, slurp):
-        """Instruct Asymptote to read the data stored in the
-           (temporary) file *slurp*.
+    def slurp(self, x, y, **kwargs):
+        """Send the *x* and *y* ndarrays to the Asymptote engine.
 
-           The slurpped data is stored, in Asymptote, in the 2d ``xq``
+           The slurpped data is stored, in Asymptote, in the 2d ``xy``
            array.
 
            """
 
-        self.send('real[][] xq')
-        self.send('xq = slurp("%s")' % (slurp))
+        slurp = '.tmp%d.dat' % (self.count)
+
+        f = open(slurp, 'wb')
+        f.write(struct.pack("i", x.size))
+        x.tofile(f)
+        y.tofile(f)
+        f.close()
+
+        self.count = self.count + 1
+
+        self.send('real[][] xy')
+        self.send('xy = slurp("%s")' % (slurp))
 
 
     def open(self):

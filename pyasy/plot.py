@@ -1,7 +1,5 @@
 """PyAsy Plot object."""
 
-
-import struct
 import textwrap
 
 import asymptote
@@ -108,7 +106,6 @@ class Plot(object):
         self.picture = 0
         self.plots = []
         self.export_tex = False
-        self.count = 0
 
 
     ##################################################################
@@ -211,7 +208,7 @@ class Plot(object):
         picture = 'p%d' % (self.picture)
 
         # slurp data into asy
-        self.asy.slurp(self._write(x, y))
+        self.asy.slurp(x, y)
 
         # draw the graph
         if pen is not None:
@@ -222,8 +219,8 @@ class Plot(object):
         else:
             pen = ['plotpen']
 
-        asy.send('''for (int i=0; i<xq[0][:].length; ++i)
-                      { dot(%s, (xq[0][i], xq[1][i]), %s); }'''
+        asy.send('''for (int i=0; i<xy[0][:].length; ++i)
+                      { dot(%s, (xy[0][i], xy[1][i]), %s); }'''
                  % (picture, '+'.join(pen)))
 
         self.x = x
@@ -244,7 +241,7 @@ class Plot(object):
         picture = 'p%d' % (self.picture)
 
         # slurp data into asy
-        self.asy.slurp(self._write(x, y))
+        self.asy.slurp(x, y)
 
         # draw the graph
         if pen is not None:
@@ -255,7 +252,7 @@ class Plot(object):
         else:
             pen = ['plotpen']
 
-        asy.send('draw(%s, graph(xq[0][:], xq[1][:]), %s)' % (picture, '+'.join(pen)))
+        asy.send('draw(%s, graph(xy[0][:], xy[1][:]), %s)' % (picture, '+'.join(pen)))
 
         self.x = x
         self.q = y
@@ -358,22 +355,3 @@ class Plot(object):
             f.close()
 
             self.export_tex = False
-
-
-    ##################################################################
-
-    def _write(self, x, q, **kwargs):
-
-        count = self.count
-
-        slurp = '.tmp%d.dat' % (count)
-
-        f = open(slurp, 'wb')
-        f.write(struct.pack("i", x.size))
-        x.tofile(f)
-        q.tofile(f)
-        f.close()
-
-        self.count = count + 1
-
-        return slurp
