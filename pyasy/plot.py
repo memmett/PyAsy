@@ -296,7 +296,7 @@ class Plot(object):
 
     ##################################################################
 
-    def new_plot(self, size=(6,2,False), shift=(0,0)):
+    def new_plot(self, size=(4,4,False), shift=(0,0)):
         """Create a new subplot."""
         self.plots.append({'size': size, 'shift': shift})
         self.picture = self.picture + 1
