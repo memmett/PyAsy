@@ -110,6 +110,44 @@ class Plot(object):
 
     ##################################################################
 
+    def _pen(self, pen, **kwargs):
+
+        if pen is not None:
+            if isinstance(pen, str):
+                pen = ['plotpen', pen.split('+')]
+            elif isinstance(pen, list):
+                pen.append('plotpen')
+        else:
+            pen = ['plotpen']
+
+        return '+'.join(pen)
+
+
+    def _picture(self, **kwargs):
+
+        if self.picture == 0:
+            self.new_plot(self.size)
+
+        return 'p%d' % (self.picture)
+
+
+    def _filter_and_slurp(self, x, y, **kwargs):
+
+        if self.xlims is not None:
+            i = x > self.xlims[0]
+            x = x[i]
+            y = y[i]
+
+            i = x < self.xlims[1]
+            x = x[i]
+            y = y[i]
+
+
+        self.asy.slurp(x, y)
+
+
+    ##################################################################
+
     def axis(self, title='',
              xlabel='$x$', ylabel='', ylims=None,
              nxtics=None, nytics=None, **kwargs):
@@ -200,28 +238,14 @@ class Plot(object):
         """Scatter plot of *y* vs *x* (both of which should be 1d
            ndarrays)."""
 
-        asy = self.asy
+        picture = self._picture(**kwargs)
+        pen = self._pen(pen, **kwargs)
 
-        if self.picture == 0:
-            self.new_plot(self.size)
+        self._filter_and_slurp(x, y, **kwargs)
 
-        picture = 'p%d' % (self.picture)
-
-        # slurp data into asy
-        self.asy.slurp(x, y)
-
-        # draw the graph
-        if pen is not None:
-            if isinstance(pen, str):
-                pen = ['plotpen', pen]
-            else:
-                pen.append('plotpen')
-        else:
-            pen = ['plotpen']
-
-        asy.send('''for (int i=0; i<xy[0][:].length; ++i)
-                      { dot(%s, (xy[0][i], xy[1][i]), %s); }'''
-                 % (picture, '+'.join(pen)))
+        self.asy.send('''for (int i=0; i<xy[0][:].length; ++i)
+                           { dot(%s, (xy[0][i], xy[1][i]), %s); }'''
+                      % (picture, pen))
 
         self.x = x
         self.q = y
@@ -233,26 +257,12 @@ class Plot(object):
         """Line plot of *y* vs *x* (both of which should be 1d
            ndarrays)."""
 
-        asy = self.asy
+        picture = self._picture(**kwargs)
+        pen = self._pen(pen, **kwargs)
 
-        if self.picture == 0:
-            self.new_plot(self.size)
+        self._filter_and_slurp(x, y)
 
-        picture = 'p%d' % (self.picture)
-
-        # slurp data into asy
-        self.asy.slurp(x, y)
-
-        # draw the graph
-        if pen is not None:
-            if isinstance(pen, str):
-                pen = ['plotpen', pen]
-            else:
-                pen.append('plotpen')
-        else:
-            pen = ['plotpen']
-
-        asy.send('draw(%s, graph(xy[0][:], xy[1][:]), %s)' % (picture, '+'.join(pen)))
+        self.asy.send('draw(%s, graph(xy[0][:], xy[1][:]), %s)' % (picture, pen))
 
         self.x = x
         self.q = y
@@ -263,7 +273,8 @@ class Plot(object):
     def horizontal_line(self, y=0.0, pen='plotpen+dotted', **kwargs):
         """Draw a horizontal line at *y* on the graph."""
 
-        picture = 'p%d' % (self.picture)
+        picture = self._picture(**kwargs)
+        pen = self._pen(pen, **kwargs)
 
         self.asy.send('real x1 = %lf' % self.xlims[0])
         self.asy.send('real x2 = %lf' % self.xlims[1])
@@ -276,7 +287,10 @@ class Plot(object):
     def vertical_line(self, x=0.0, pen='plotpen+dotted', **kwargs):
         """Draw a vertical line at *x* on the graph."""
 
-        picture = 'p%d' % (self.picture)
+        picture = self._picture(**kwargs)
+        pen = self._pen(pen, **kwargs)
+
+
         self.asy.send('yaxis(%s, XEquals(%lf, false), %s)'
                       % (picture, x, pen))
 
@@ -298,6 +312,7 @@ class Plot(object):
 
     def new_plot(self, size=(4,4,False), shift=(0,0)):
         """Create a new subplot."""
+
         self.plots.append({'size': size, 'shift': shift})
         self.picture = self.picture + 1
         self.asy.send('picture p%d' % (self.picture))
