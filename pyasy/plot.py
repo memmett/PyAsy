@@ -82,6 +82,8 @@ class Plot(object):
         # init asy
         asy = asymptote.Asymptote(**kwargs)
         asy.send('import graph')
+        asy.send('import contour')
+        asy.send('import palette')
         asy.send('defaultpen(fontsize(10pt))')
 
         # init pens
@@ -114,7 +116,7 @@ class Plot(object):
 
         if pen is not None:
             if isinstance(pen, str):
-                pen = ['plotpen', pen.split('+')]
+                pen = ['plotpen'] + pen.split('+')
             elif isinstance(pen, list):
                 pen.append('plotpen')
         else:
@@ -131,7 +133,7 @@ class Plot(object):
         return 'p%d' % (self.picture)
 
 
-    def _filter_and_slurp(self, x, y, **kwargs):
+    def _filter_and_slurp2(self, x, y, **kwargs):
 
         if self.xlims is not None:
             i = x > self.xlims[0]
@@ -143,7 +145,14 @@ class Plot(object):
             y = y[i]
 
 
-        self.asy.slurp(x, y)
+        self.asy.slurp2(x, y)
+
+
+    def _filter_and_slurp3(self, x, y, z, **kwargs):
+
+        # XXX: filter...
+
+        self.asy.slurp3(x, y, z)
 
 
     ##################################################################
@@ -191,7 +200,7 @@ class Plot(object):
         asy.send('''xaxis(%(pic)s,
                           Label("%(title)s", MidPoint, N),
                           YEquals(y2),
-                          x1, x2
+                          x1, x2, above=true
                           )'''
                  % { 'pic': picture, 'title': title } )
 
@@ -200,7 +209,8 @@ class Plot(object):
                               Label("%(xlabel)s", MidPoint, S),
                               YEquals(y1),
                               x1, x2,
-                              LeftTicks(N=%(N)d, n=%(n)d)
+                              LeftTicks(N=%(N)d, n=%(n)d),
+                              above=true
                               )'''
                      % { 'pic': picture, 'xlabel': xlabel,
                          'N': nxtics[0], 'n': nxtics[1] } )
@@ -209,25 +219,28 @@ class Plot(object):
                               Label("%(xlabel)s", MidPoint, S),
                               YEquals(y1),
                               x1, x2,
-                              LeftTicks
+                              LeftTicks,
+                              above=true
                               )'''
                      % { 'pic': picture, 'xlabel': xlabel } )
 
         if nytics is not None:
             asy.send('''yaxis(%(pic)s,
                               "%(ylabel)s",
-                              LeftRight,
+                              Left,
                               y1, y2,
-                              RightTicks(N=%(N)d, n=%(n)d)
+                              RightTicks(N=%(N)d, n=%(n)d),
+                              above=true
                               )'''
                      % { 'pic': picture, 'ylabel': ylabel,
                          'N': nytics[0], 'n': nytics[1] } )
         else:
             asy.send('''yaxis(%(pic)s,
                               "%(ylabel)s",
-                              LeftRight,
+                              Left,
                               y1, y2,
-                              RightTicks
+                              RightTicks,
+                              above=true
                               )'''
                      % { 'pic': picture, 'ylabel': ylabel } )
 
@@ -241,10 +254,10 @@ class Plot(object):
         picture = self._picture(**kwargs)
         pen = self._pen(pen, **kwargs)
 
-        self._filter_and_slurp(x, y, **kwargs)
+        self._filter_and_slurp2(x, y, **kwargs)
 
-        self.asy.send('''for (int i=0; i<xy[0][:].length; ++i)
-                           { dot(%s, (xy[0][i], xy[1][i]), %s); }'''
+        self.asy.send('''for (int i=0; i<X.length; ++i)
+                           { dot(%s, (X[i], Y[i]), %s); }'''
                       % (picture, pen))
 
         self.x = x
@@ -260,9 +273,38 @@ class Plot(object):
         picture = self._picture(**kwargs)
         pen = self._pen(pen, **kwargs)
 
-        self._filter_and_slurp(x, y)
+        self._filter_and_slurp2(x, y)
 
-        self.asy.send('draw(%s, graph(xy[0][:], xy[1][:]), %s)' % (picture, pen))
+        self.asy.send('draw(%s, graph(X, Y), %s)' % (picture, pen))
+
+        self.x = x
+        self.q = y
+
+
+    ##################################################################
+
+    def colour_contour(self, x, y, z, bar=False, pen=None, **kwargs):
+        """Contour plot of *z* vs (*x*, *y*)."""
+
+        picture = self._picture(**kwargs)
+        pen = self._pen(pen, **kwargs)
+
+        self._filter_and_slurp3(x, y, z)
+
+        self.asy.send('pen[] pal = Rainbow(512)')
+        self.asy.send('pair initial = (%lf, %lf)' % (x[0], y[0]))
+        self.asy.send('pair final = (%lf, %lf)' % (x[-1], y[-1]))
+        self.asy.send('''bounds range =
+          image(%s, ZZ, initial, final, pal,
+                antialias=true)''' % (picture))
+
+        if bar:
+            self.asy.send('initial = ' + str(bar['initial']))
+            self.asy.send('final = ' + str(bar['final']))
+
+            self.asy.send(
+                'palette(%s, "%s", range, initial, final, pal, %s)'
+                 % (picture, bar['label'], pen))
 
         self.x = x
         self.q = y
@@ -298,7 +340,7 @@ class Plot(object):
     ##################################################################
 
     def caption(self, caption='', label='',
-                includegraphics_options=''):
+                includegraphics_options='', **kwargs):
         """Set caption used for LaTeX export (see *shipout* method)."""
 
         self.caption = caption
@@ -354,19 +396,35 @@ class Plot(object):
             options = self.includegraphics_options
 
             f = open('%s.tex' % (basename), 'w')
-            f.write(textwrap.dedent(
-                '''\
-                \\begin{figure}
-                  \\centering
-                  \\includegraphics[%(options)s]{plots/%(basename)s}
-                  \\caption{%(caption)s}
-                  \\label{%(label)s}
-                \\end{figure}
-                ''' % { 'basename': basename,
-                        'options': options,
-                        'caption': caption,
-                        'label': label
-                        }  ))
+
+            if options:
+                f.write(textwrap.dedent(
+                    '''\
+                    \\begin{figure}
+                      \\centering
+                      \\includegraphics[%(options)s]{plots/%(basename)s}
+                      \\caption{%(caption)s}
+                      \\label{%(label)s}
+                    \\end{figure}
+                    ''' % { 'basename': basename,
+                            'options': options,
+                            'caption': caption,
+                            'label': label
+                            }  ))
+            else:
+                f.write(textwrap.dedent(
+                    '''\
+                    \\begin{figure}
+                      \\centering
+                      \\includegraphics{plots/%(basename)s}
+                      \\caption{%(caption)s}
+                      \\label{%(label)s}
+                    \\end{figure}
+                    ''' % { 'basename': basename,
+                            'caption': caption,
+                            'label': label
+                            }  ))
+
             f.close()
 
             self.export_tex = False

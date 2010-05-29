@@ -25,25 +25,50 @@ class Asymptote(object):
 
        """
 
-    asy_slurp = """real[][] slurp(string filename) {
-                     file dat = binput(filename);
+    asy_slurp2 = """void slurp2(string filename) {
+                      file dat = binput(filename);
 
-                     int N = dat;
+                      int N = dat;
 
-                     real[][] xy = new real[N][N];
-                     xy[0][:] = dimension(dat, N);
-                     xy[1][:] = dimension(dat, N);
+                      X = new real[N];
+                      Y = new real[N];
 
-                     close(dat);
+                      X[:] = dimension(dat, N);
+                      Y[:] = dimension(dat, N);
 
-                     return xy;
-                   }"""
+                      close(dat);
+                    }"""
+
+    asy_slurp3 = """void slurp3(string filename) {
+                      file dat = binput(filename);
+
+                      int N = dat;
+                      int M = dat;
+
+                      X = new real[N];
+                      Y = new real[M];
+                      Z = new real[N*M];
+                      ZZ = new real[N][M];
+
+                      X[:] = dimension(dat, N);
+                      Y[:] = dimension(dat, M);
+                      Z[:] = dimension(dat, N*M);
+
+                      for (int i=0; i<X.length; ++i)
+                        for (int j=0; j<Y.length; ++j)
+                          ZZ[i][j] = Z[i*Y.length+j];
+
+                      close(dat);
+                    }"""
 
 
     def __init__(self, echo=False, **kwargs):
         self.echo = echo
         self.open()
-        self.send(self.asy_slurp)
+        self.send('real[] X, Y, Z')
+        self.send('real[][] ZZ')
+        self.send(self.asy_slurp2)
+        self.send(self.asy_slurp3)
 
         self.count = 0
 
@@ -58,7 +83,7 @@ class Asymptote(object):
         self.session.stdin.flush()
 
 
-    def slurp(self, x, y, **kwargs):
+    def slurp2(self, x, y, **kwargs):
         """Send the *x* and *y* ndarrays to the Asymptote engine.
 
            The slurpped data is stored, in Asymptote, in the 2d ``xy``
@@ -76,8 +101,30 @@ class Asymptote(object):
 
         self.count = self.count + 1
 
-        self.send('real[][] xy')
-        self.send('xy = slurp("%s")' % (slurp))
+        self.send('slurp2("%s")' % (slurp))
+
+
+    def slurp3(self, x, y, z, **kwargs):
+        """Send the *x*, *y*, and *z* ndarrays to the Asymptote engine.
+
+           The slurpped data is stored, in Asymptote, in the 2d ``xy``
+           array and the 2d ``z`` array.
+
+           """
+
+        slurp = '.tmp%d.dat' % (self.count)
+
+        f = open(slurp, 'wb')
+        f.write(struct.pack("i", x.size))
+        f.write(struct.pack("i", y.size))
+        x.tofile(f)
+        y.tofile(f)
+        z.tofile(f)
+        f.close()
+
+        self.count = self.count + 1
+
+        self.send('slurp3("%s")' % (slurp))
 
 
     def open(self):
