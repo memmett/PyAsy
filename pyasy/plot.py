@@ -158,31 +158,35 @@ class Plot(object):
     ##################################################################
 
     def axis(self, title='',
-             xlabel='$x$', ylabel='', ylims=None,
-             nxtics=None, nytics=None, **kwargs):
+             xlabel='$x$', ylabel='',
+             ylims=None,                # XXX: move elsewhere?
+             xticks=('LeftTicks', {}),
+             yticks=('RightTicks', {}),
+             **kwargs):
         """Label the current plot and axis.
 
            **Arguments**
 
-           * *title* - Plot title.
+           * *title* - plot title.
 
            * *xlabel* - x-axis label.
 
            * *ylabel* - y-axis label.
 
-           * *nxtics* - Tuple ``(N, n)`` containing the number of
-             major (N) and minor (n) x-axis ticks.
+           * *xticks* - tuple (*type*, *options*) where *type* is the
+              name of an Asymptote tick constructor (eg, 'LeftTicks'),
+              and *options* is a dictionary of options (keys) and
+              values that are passed to the tick constructor.
 
-           * *nytics* - Tuple ``(N, n)`` containing the number of
-             major (N) and minor (n) y-axis ticks.
+           * *yticks* - as above.
 
            """
 
         asy   = self.asy
         xlims = self.xlims
-        q     = self.q
+        y     = self.y
 
-        picture = 'p%d' % (self.picture)
+        picture = self._picture()
 
         if xlims is None:
             x = self.x
@@ -192,7 +196,7 @@ class Plot(object):
         asy.send('real x2 = %lf' % xlims[1])
 
         if ylims is None:
-            ylims = [q.min(), q.max()]
+            ylims = [y.min(), y.max()]
 
         asy.send('real y1 = %lf' % ylims[0])
         asy.send('real y2 = %lf' % ylims[1])
@@ -204,45 +208,43 @@ class Plot(object):
                           )'''
                  % { 'pic': picture, 'title': title } )
 
-        if nxtics is not None:
-            asy.send('''xaxis(%(pic)s,
-                              Label("%(xlabel)s", MidPoint, S),
-                              YEquals(y1),
-                              x1, x2,
-                              LeftTicks(N=%(N)d, n=%(n)d),
-                              above=true
-                              )'''
-                     % { 'pic': picture, 'xlabel': xlabel,
-                         'N': nxtics[0], 'n': nxtics[1] } )
-        else:
-            asy.send('''xaxis(%(pic)s,
-                              Label("%(xlabel)s", MidPoint, S),
-                              YEquals(y1),
-                              x1, x2,
-                              LeftTicks,
-                              above=true
-                              )'''
-                     % { 'pic': picture, 'xlabel': xlabel } )
 
-        if nytics is not None:
-            asy.send('''yaxis(%(pic)s,
-                              "%(ylabel)s",
-                              Left,
-                              y1, y2,
-                              RightTicks(N=%(N)d, n=%(n)d),
-                              above=true
-                              )'''
-                     % { 'pic': picture, 'ylabel': ylabel,
-                         'N': nytics[0], 'n': nytics[1] } )
-        else:
-            asy.send('''yaxis(%(pic)s,
-                              "%(ylabel)s",
-                              Left,
-                              y1, y2,
-                              RightTicks,
-                              above=true
-                              )'''
-                     % { 'pic': picture, 'ylabel': ylabel } )
+        # x ticks
+        t = xticks[0]
+        o = xticks[1]
+        ticks = t + '(' + ','.join(['%s=%s' % (str(k), str(o[k])) for k in o]) + ')'
+
+        print ticks
+
+        asy.send('''xaxis(%(pic)s,
+                          Label("%(xlabel)s", MidPoint, S),
+                          YEquals(y1),
+                          x1, x2,
+                          %(ticks)s,
+                          above=true
+                          )'''
+                 % { 'pic': picture,
+                     'xlabel': xlabel,
+                     'ticks': ticks })
+
+        # y ticks
+        t = yticks[0]
+        o = yticks[1]
+        ticks = t + '(' + ','.join(['%s=%s' % (str(k), str(o[k])) for k in o]) + ')'
+
+        print ticks
+
+        asy.send('''yaxis(%(pic)s,
+                          "%(ylabel)s",
+                          LeftRight,
+                          y1, y2,
+                          %(ticks)s,
+                          above=true
+                          )'''
+                 % { 'pic': picture,
+                     'ylabel': ylabel,
+                     'ticks': ticks })
+
 
 
     ##################################################################
@@ -261,7 +263,7 @@ class Plot(object):
                       % (picture, pen))
 
         self.x = x
-        self.q = y
+        self.y = y
 
 
     ##################################################################
@@ -278,7 +280,7 @@ class Plot(object):
         self.asy.send('draw(%s, graph(X, Y), %s)' % (picture, pen))
 
         self.x = x
-        self.q = y
+        self.y = y
 
 
     ##################################################################
@@ -307,7 +309,7 @@ class Plot(object):
                  % (picture, bar['label'], pen))
 
         self.x = x
-        self.q = y
+        self.y = y
 
 
     ##################################################################
@@ -341,7 +343,8 @@ class Plot(object):
 
     def caption(self, caption='', label='',
                 includegraphics_options='', **kwargs):
-        """Set caption used for LaTeX export (see *shipout* method)."""
+        """Set caption used for LaTeX export (see *shipout*
+           method)."""
 
         self.caption = caption
         self.label = label
