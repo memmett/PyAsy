@@ -77,7 +77,7 @@ class Asymptote(object):
         """Send a command to the Asymptote engine.  A trailing
            semicolon is added automatically."""
         if self.echo:
-            print cmd
+            print cmd+';'
 
         self.session.stdin.write(cmd+';\n')
         self.session.stdin.flush()
