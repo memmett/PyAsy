@@ -107,6 +107,7 @@ class Plot(object):
         self.size = size
         self.picture = 0
         self.plots = []
+        self.palette = False
         self.export_tex = False
 
 
@@ -214,8 +215,6 @@ class Plot(object):
         o = xticks[1]
         ticks = t + '(' + ','.join(['%s=%s' % (str(k), str(o[k])) for k in o]) + ')'
 
-        print ticks
-
         asy.send('''xaxis(%(pic)s,
                           Label("%(xlabel)s", MidPoint, S),
                           YEquals(y1),
@@ -232,8 +231,6 @@ class Plot(object):
         o = yticks[1]
         ticks = t + '(' + ','.join(['%s=%s' % (str(k), str(o[k])) for k in o]) + ')'
 
-        print ticks
-
         asy.send('''yaxis(%(pic)s,
                           "%(ylabel)s",
                           LeftRight,
@@ -245,6 +242,10 @@ class Plot(object):
                      'ylabel': ylabel,
                      'ticks': ticks })
 
+        # pallete
+        if self.palette:
+            asy.send(self.palette)
+            self.palette = False
 
 
     ##################################################################
@@ -285,15 +286,22 @@ class Plot(object):
 
     ##################################################################
 
-    def colour_contour(self, x, y, z, bar=False, pen=None, **kwargs):
-        """Contour plot of *z* vs (*x*, *y*)."""
+    def density(self, x, y, z, bar=False, pen=None,
+                palette='Rainbow(512)', **kwargs):
+        """Density (colour filled contour) plot of *z* vs (*x*, *y*).
+
+           **Arguments**
+
+           * XXX
+
+        """
 
         picture = self._picture(**kwargs)
         pen = self._pen(pen, **kwargs)
 
         self._filter_and_slurp3(x, y, z)
 
-        self.asy.send('pen[] pal = Rainbow(512)')
+        self.asy.send('pen[] pal = %s' % palette)
         self.asy.send('pair initial = (%lf, %lf)' % (x[0], y[0]))
         self.asy.send('pair final = (%lf, %lf)' % (x[-1], y[-1]))
         self.asy.send('''bounds range =
@@ -301,15 +309,19 @@ class Plot(object):
                 antialias=true)''' % (picture))
 
         if bar:
-            self.asy.send('initial = ' + str(bar['initial']))
-            self.asy.send('final = ' + str(bar['final']))
-
-            self.asy.send(
-                'palette(%s, "%s", range, initial, final, pal, %s)'
-                 % (picture, bar['label'], pen))
+            self.palette = '''
+              initial = %(initial)s;
+              final = %(final)s;
+              palette(%(picture)s, "%(label)s", range, initial, final, pal, %(pen)s)
+              ''' % {'picture': picture,
+                     'initial': str(bar['initial']),
+                     'final':   str(bar['final']),
+                     'label': bar['label'],
+                     'pen': pen }
 
         self.x = x
         self.y = y
+        self.z = z
 
 
     ##################################################################
