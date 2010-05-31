@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>PyAsy Examples &mdash; PyAsy v0.1.1 documentation</title>
+    <title>PyAsy Examples &mdash; PyAsy v0.2.0 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1.1',
+        VERSION:     '0.2.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PyAsy v0.1.1 documentation" href="index.html" />
+    <link rel="top" title="PyAsy v0.2.0 documentation" href="index.html" />
     <link rel="next" title="What’s news in PyAsy?" href="whatsnew.html" />
     <link rel="prev" title="PyAsy Reference" href="reference.html" /> 
   </head>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="reference.html" title="PyAsy Reference"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">PyAsy v0.1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyAsy v0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -68,6 +68,32 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="contour-example">
+<h2>Contour example<a class="headerlink" href="#contour-example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;A simple example of how to use PyAsy.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pyasy.plot</span>
+
+<span class="n">plot</span> <span class="o">=</span> <span class="n">pyasy</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">Plot</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mf">4</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="bp">True</span><span class="p">))</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">201</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">201</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">,</span><span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mf">2</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">**</span><span class="mf">2</span><span class="p">))</span>
+
+<span class="n">plot</span><span class="o">.</span><span class="n">density</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span>
+             <span class="n">bar</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;label&#39;</span><span class="p">:</span> <span class="s">&#39;$z$&#39;</span><span class="p">,</span>
+                  <span class="s">&#39;initial&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span>
+                  <span class="s">&#39;final&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">4.25</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)})</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s">&#39;$x$&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s">&#39;$y$&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">shipout</span><span class="p">(</span><span class="s">&#39;contour&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -80,6 +106,7 @@
             <ul>
 <li><a class="reference external" href="">PyAsy Examples</a><ul>
 <li><a class="reference external" href="#a-very-simple-example">A very simple example</a></li>
+<li><a class="reference external" href="#contour-example">Contour example</a></li>
 </ul>
 </li>
 </ul>
@@ -127,7 +154,7 @@
         <li class="right" >
           <a href="reference.html" title="PyAsy Reference"
              >previous</a> |</li>
-        <li><a href="index.html">PyAsy v0.1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyAsy v0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

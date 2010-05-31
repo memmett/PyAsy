@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>PyAsy Reference &mdash; PyAsy v0.1.1 documentation</title>
+    <title>PyAsy Reference &mdash; PyAsy v0.2.0 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1.1',
+        VERSION:     '0.2.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PyAsy v0.1.1 documentation" href="index.html" />
+    <link rel="top" title="PyAsy v0.2.0 documentation" href="index.html" />
     <link rel="next" title="PyAsy Examples" href="examples.html" />
     <link rel="prev" title="PyAsy" href="index.html" /> 
   </head>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="index.html" title="PyAsy"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">PyAsy v0.1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyAsy v0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -116,24 +116,44 @@ pyasy.asymptote.Asymptote constructor.</p>
 <p><strong>Methods</strong></p>
 <dl class="method">
 <dt id="pyasy.plot.Plot.axis">
-<tt class="descname">axis</tt><big>(</big><em>title=''</em>, <em>xlabel='$x$'</em>, <em>ylabel=''</em>, <em>ylims=None</em>, <em>nxtics=None</em>, <em>nytics=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.axis" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">axis</tt><big>(</big><em>title=''</em>, <em>xlabel='$x$'</em>, <em>ylabel=''</em>, <em>ylims=None</em>, <em>xticks=('LeftTicks'</em>, <em>{})</em>, <em>yticks=('RightTicks'</em>, <em>{})</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.axis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Label the current plot and axis.</p>
 <p><strong>Arguments</strong></p>
-<ul class="simple">
-<li><em>title</em> - Plot title.</li>
-<li><em>xlabel</em> - x-axis label.</li>
-<li><em>ylabel</em> - y-axis label.</li>
-<li><em>nxtics</em> - Tuple <tt class="docutils literal"><span class="pre">(N,</span> <span class="pre">n)</span></tt> containing the number of
-major (N) and minor (n) x-axis ticks.</li>
-<li><em>nytics</em> - Tuple <tt class="docutils literal"><span class="pre">(N,</span> <span class="pre">n)</span></tt> containing the number of
-major (N) and minor (n) y-axis ticks.</li>
+<ul>
+<li><p class="first"><em>title</em> - plot title.</p>
+</li>
+<li><p class="first"><em>xlabel</em> - x-axis label.</p>
+</li>
+<li><p class="first"><em>ylabel</em> - y-axis label.</p>
+</li>
+<li><dl class="first docutils">
+<dt><em>xticks</em> - tuple (<em>type</em>, <em>options</em>) where <em>type</em> is the</dt>
+<dd><p class="first last">name of an Asymptote tick constructor (eg, &#8216;LeftTicks&#8217;),
+and <em>options</em> is a dictionary of options (keys) and
+values that are passed to the tick constructor.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first"><em>yticks</em> - as above.</p>
+</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyasy.plot.Plot.caption">
-<tt class="descname">caption</tt><big>(</big><em>caption=''</em>, <em>label=''</em>, <em>includegraphics_options=''</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.caption" title="Permalink to this definition">¶</a></dt>
-<dd>Set caption used for LaTeX export (see <em>shipout</em> method).</dd></dl>
+<tt class="descname">caption</tt><big>(</big><em>caption=''</em>, <em>label=''</em>, <em>includegraphics_options=''</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.caption" title="Permalink to this definition">¶</a></dt>
+<dd>Set caption used for LaTeX export (see <em>shipout</em>
+method).</dd></dl>
+
+<dl class="method">
+<dt id="pyasy.plot.Plot.density">
+<tt class="descname">density</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>bar=False</em>, <em>pen=None</em>, <em>palette='Rainbow(512)'</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Density (colour filled contour) plot of <em>z</em> vs (<em>x</em>, <em>y</em>).</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li>XXX</li>
+</ul>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyasy.plot.Plot.horizontal_line">
@@ -148,7 +168,7 @@ ndarrays).</dd></dl>
 
 <dl class="method">
 <dt id="pyasy.plot.Plot.new_plot">
-<tt class="descname">new_plot</tt><big>(</big><em>size=(6</em>, <em>2</em>, <em>False)</em>, <em>shift=(0</em>, <em>0)</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.new_plot" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">new_plot</tt><big>(</big><em>size=(4</em>, <em>4</em>, <em>False)</em>, <em>shift=(0</em>, <em>0)</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.new_plot" title="Permalink to this definition">¶</a></dt>
 <dd>Create a new subplot.</dd></dl>
 
 <dl class="method">
@@ -205,12 +225,19 @@ variable.)</li>
 semicolon is added automatically.</dd></dl>
 
 <dl class="method">
-<dt id="pyasy.asymptote.Asymptote.slurp">
-<tt class="descname">slurp</tt><big>(</big><em>slurp</em><big>)</big><a class="headerlink" href="#pyasy.asymptote.Asymptote.slurp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Instruct Asymptote to read the data stored in the
-(temporary) file <em>slurp</em>.</p>
-<p>The slurpped data is stored, in Asymptote, in the 2d <tt class="docutils literal"><span class="pre">xq</span></tt>
+<dt id="pyasy.asymptote.Asymptote.slurp2">
+<tt class="descname">slurp2</tt><big>(</big><em>x</em>, <em>y</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.asymptote.Asymptote.slurp2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send the <em>x</em> and <em>y</em> ndarrays to the Asymptote engine.</p>
+<p>The slurpped data is stored, in Asymptote, in the 2d <tt class="docutils literal"><span class="pre">xy</span></tt>
 array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyasy.asymptote.Asymptote.slurp3">
+<tt class="descname">slurp3</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.asymptote.Asymptote.slurp3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send the <em>x</em>, <em>y</em>, and <em>z</em> ndarrays to the Asymptote engine.</p>
+<p>The slurpped data is stored, in Asymptote, in the 2d <tt class="docutils literal"><span class="pre">xy</span></tt>
+array and the 2d <tt class="docutils literal"><span class="pre">z</span></tt> array.</p>
 </dd></dl>
 
 </dd></dl>
@@ -287,7 +314,7 @@ array.</p>
         <li class="right" >
           <a href="index.html" title="PyAsy"
              >previous</a> |</li>
-        <li><a href="index.html">PyAsy v0.1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyAsy v0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
