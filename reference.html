@@ -50,12 +50,12 @@
             
   <div class="section" id="pyasy-reference">
 <h1>PyAsy Reference<a class="headerlink" href="#pyasy-reference" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="pyasy-class">
-<h2>PyAsy class<a class="headerlink" href="#pyasy-class" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="plot-class">
+<h2>Plot class<a class="headerlink" href="#plot-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyasy.plot.Plot">
 <em class="property">
-class </em><tt class="descclassname">pyasy.plot.</tt><tt class="descname">Plot</tt><big>(</big><em>xlims=None</em>, <em>size=(4</em>, <em>4</em>, <em>False)</em>, <em>defaultpen=None</em>, <em>plotpen=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot" title="Permalink to this definition">¶</a></dt>
+class </em><tt class="descclassname">pyasy.plot.</tt><tt class="descname">Plot</tt><big>(</big><em>xlims=None</em>, <em>ylims=None</em>, <em>smooth=None</em>, <em>size=(4</em>, <em>4</em>, <em>False)</em>, <em>defaultpen=None</em>, <em>plotpen=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>PyAsy Asymptote wrapper.</p>
 <p><strong>Basic usage</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyasy.plot</span>
@@ -120,21 +120,22 @@ pyasy.asymptote.Asymptote constructor.</p>
 <dd><p>Label the current plot and axis.</p>
 <p><strong>Arguments</strong></p>
 <ul>
-<li><p class="first"><em>title</em> - plot title.</p>
+<li><p class="first"><em>title</em>: Plot title.</p>
 </li>
-<li><p class="first"><em>xlabel</em> - x-axis label.</p>
+<li><p class="first"><em>xlabel</em>: x-axis label.</p>
 </li>
-<li><p class="first"><em>ylabel</em> - y-axis label.</p>
+<li><p class="first"><em>ylabel</em>: y-axis label.</p>
 </li>
 <li><dl class="first docutils">
-<dt><em>xticks</em> - tuple (<em>type</em>, <em>options</em>) where <em>type</em> is the</dt>
+<dt><em>xticks</em>: Tuple <tt class="docutils literal"><span class="pre">(type,</span> <span class="pre">options)</span></tt> where <em>type</em> is the</dt>
 <dd><p class="first last">name of an Asymptote tick constructor (eg, &#8216;LeftTicks&#8217;),
 and <em>options</em> is a dictionary of options (keys) and
-values that are passed to the tick constructor.</p>
+values that are passed to the tick constructor.  Please
+see the Asymptote documentation for more details.</p>
 </dd>
 </dl>
 </li>
-<li><p class="first"><em>yticks</em> - as above.</p>
+<li><p class="first"><em>yticks</em>: As above.</p>
 </li>
 </ul>
 </dd></dl>
@@ -142,13 +143,18 @@ values that are passed to the tick constructor.</p>
 <dl class="method">
 <dt id="pyasy.plot.Plot.caption">
 <tt class="descname">caption</tt><big>(</big><em>caption=''</em>, <em>label=''</em>, <em>includegraphics_options=''</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.caption" title="Permalink to this definition">¶</a></dt>
-<dd>Set caption used for LaTeX export (see <em>shipout</em>
-method).</dd></dl>
+<dd><p>Set caption used for LaTeX export (see the <em>shipout</em>
+method).</p>
+<p><strong>Arguments</strong></p>
+<p>XXX</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyasy.plot.Plot.density">
-<tt class="descname">density</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>bar=False</em>, <em>pen=None</em>, <em>palette='Rainbow(512)'</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.density" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">density</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>pen=None</em>, <em>palette='Rainbow(512)'</em>, <em>brange='Full'</em>, <em>bar=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.density" title="Permalink to this definition">¶</a></dt>
 <dd><p>Density (colour filled contour) plot of <em>z</em> vs (<em>x</em>, <em>y</em>).</p>
+<p>The x, y, and z ndarrays are indexed as: <tt class="docutils literal"><span class="pre">x[i]</span></tt>,
+<tt class="docutils literal"><span class="pre">y[j]</span></tt>, and <tt class="docutils literal"><span class="pre">z[i,j]</span></tt> respectively.</p>
 <p><strong>Arguments</strong></p>
 <ul class="simple">
 <li>XXX</li>
@@ -161,21 +167,40 @@ method).</dd></dl>
 <dd>Draw a horizontal line at <em>y</em> on the graph.</dd></dl>
 
 <dl class="method">
+<dt id="pyasy.plot.Plot.legend">
+<tt class="descname">legend</tt><big>(</big><em>position=None</em>, <em>direction=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.legend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a legend.</p>
+<p><strong>Arguments</strong></p>
+<p>XXX</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="pyasy.plot.Plot.line">
-<tt class="descname">line</tt><big>(</big><em>x</em>, <em>y</em>, <em>pen=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.line" title="Permalink to this definition">¶</a></dt>
-<dd>Line plot of <em>y</em> vs <em>x</em> (both of which should be 1d
-ndarrays).</dd></dl>
+<tt class="descname">line</tt><big>(</big><em>x</em>, <em>y</em>, <em>pen=None</em>, <em>legend=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Line plot of <em>y</em> vs <em>x</em> (both of which should be 1d
+ndarrays).</p>
+<p><strong>Arguments</strong></p>
+<p>XXX</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyasy.plot.Plot.new_plot">
 <tt class="descname">new_plot</tt><big>(</big><em>size=(4</em>, <em>4</em>, <em>False)</em>, <em>shift=(0</em>, <em>0)</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.new_plot" title="Permalink to this definition">¶</a></dt>
-<dd>Create a new subplot.</dd></dl>
+<dd><p>Create a new subplot.</p>
+<p><strong>Arguments</strong></p>
+<p>XXX</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyasy.plot.Plot.scatter">
 <tt class="descname">scatter</tt><big>(</big><em>x</em>, <em>y</em>, <em>pen=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.scatter" title="Permalink to this definition">¶</a></dt>
-<dd>Scatter plot of <em>y</em> vs <em>x</em> (both of which should be 1d
-ndarrays).</dd></dl>
+<dd><p>Scatter plot of <em>y</em> vs <em>x</em> (both of which should be 1d
+ndarrays).</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li>XXX</li>
+</ul>
+</dd></dl>
 
 <dl class="method">
 <dt id="pyasy.plot.Plot.shipout">
@@ -189,9 +214,74 @@ output to <em>basename</em>.tex (eg, <tt class="docutils literal"><span class="p
 </dd></dl>
 
 <dl class="method">
+<dt id="pyasy.plot.Plot.stepped">
+<tt class="descname">stepped</tt><big>(</big><em>x</em>, <em>t</em>, <em>y</em>, <em>pen=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.stepped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Consecutive plots of <em>y</em> vs <em>x</em> for the various values of
+time in <em>t</em>.</p>
+<p>The x, t, and y ndarrays are indexed as: <tt class="docutils literal"><span class="pre">x[i]</span></tt>,
+<tt class="docutils literal"><span class="pre">t[n]</span></tt>, and <tt class="docutils literal"><span class="pre">y[n,i]</span></tt> respectively.</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li>XXX</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
 <dt id="pyasy.plot.Plot.vertical_line">
 <tt class="descname">vertical_line</tt><big>(</big><em>x=0.0</em>, <em>pen='plotpen+dotted'</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.vertical_line" title="Permalink to this definition">¶</a></dt>
 <dd>Draw a vertical line at <em>x</em> on the graph.</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="animation-class">
+<h2>Animation class<a class="headerlink" href="#animation-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyasy.animation.Animation">
+<em class="property">
+class </em><tt class="descclassname">pyasy.animation.</tt><tt class="descname">Animation</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.animation.Animation" title="Permalink to this definition">¶</a></dt>
+<dd><p>PyAsy Asymptote wrapper for creating PDF animations.</p>
+<p>To create a stand-alone PDF animation (ie, a PDF document that
+only contains the animation and controls), set the <em>render</em>
+flag to True when shipping out the animation.  To create a
+multipage PDF animation (so that you can include the animation
+in, eg, LaTeX presentations), leave the <em>render</em> flag set to
+False when shipping out the animation.</p>
+<p>To include a multipage animation in a LaTeX document, you must
+include the <em>animate</em> package in the preamble:</p>
+<blockquote>
+usepackage{animate}</blockquote>
+<p>and use the <em>animategraphics</em> macro in the body:</p>
+<blockquote>
+nimategraphics[controls]{12}{filename}{}{}.</blockquote>
+<p><strong>Basic usage</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyasy.animation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">pyasy</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">Animation</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mf">4</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="bp">False</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>XXX</p>
+<dl class="method">
+<dt id="pyasy.animation.Animation.animate">
+<tt class="descname">animate</tt><big>(</big><em>x</em>, <em>t</em>, <em>y</em>, <em>pen=None</em>, <em>xlabel='$x$'</em>, <em>ylabel=''</em>, <em>xticks=('LeftTicks'</em>, <em>{})</em>, <em>yticks=('RightTicks'</em>, <em>{})</em>, <em>xlims=None</em>, <em>ylims=None</em>, <em>tlabel=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.animation.Animation.animate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an animation of <em>y</em> vs <em>x</em> for the various values of
+time in <em>t</em>.</p>
+<p>The x, t, and y ndarrays are indexed as: <tt class="docutils literal"><span class="pre">x[i]</span></tt>,
+<tt class="docutils literal"><span class="pre">t[n]</span></tt>, and <tt class="docutils literal"><span class="pre">y[n,i]</span></tt> respectively.</p>
+<p><strong>Arguments</strong></p>
+<ul class="simple">
+<li><em>xlabel</em>:</li>
+<li><em>ylabel</em>:</li>
+<li><em>xticks</em>:</li>
+<li><em>yticks</em>:</li>
+<li><em>xlims</em>:</li>
+<li><em>ylims</em>:</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyasy.animation.Animation.shipout">
+<tt class="descname">shipout</tt><big>(</big><em>basename='animation'</em>, <em>render=False</em><big>)</big><a class="headerlink" href="#pyasy.animation.Animation.shipout" title="Permalink to this definition">¶</a></dt>
+<dd>Shipout the current animation.</dd></dl>
 
 </dd></dl>
 
@@ -264,7 +354,8 @@ array and the 2d <tt class="docutils literal"><span class="pre">z</span></tt> ar
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
 <li><a class="reference external" href="">PyAsy Reference</a><ul>
-<li><a class="reference external" href="#pyasy-class">PyAsy class</a></li>
+<li><a class="reference external" href="#plot-class">Plot class</a></li>
+<li><a class="reference external" href="#animation-class">Animation class</a></li>
 <li><a class="reference external" href="#asymptote-class">Asymptote class</a></li>
 <li><a class="reference external" href="#module-pyasy.version">Version information</a></li>
 </ul>
