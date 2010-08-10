@@ -87,6 +87,7 @@ class Base(object):
             x = x[i]
             y = y[i]
 
+        # XXX: document this somewhere
         # XXX: see http://www.scipy.org/Cookbook/SignalSmooth for more smoothing options...
 
         if self.smooth:                 # moving average
@@ -122,269 +123,269 @@ class Base(object):
         return '(' + ','.join(['%s=%s' % (str(k), str(d[k])) for k in d]) + ')'
 
 
-    ##################################################################
+#     ##################################################################
 
-    def _axis(self,
-              title='',
-              xlabel='$x$', ylabel='',
-              xticks=('LeftTicks', {}),
-              yticks=('RightTicks', {}),
-              picture=None,
-              **kwargs):
+#     def _axis(self,
+#               title='',
+#               xlabel='$x$', ylabel='',
+#               xticks=('LeftTicks', {}),
+#               yticks=('RightTicks', {}),
+#               picture=None,
+#               **kwargs):
 
-        asy   = self.asy
-        xlims = self.xlims
-        ylims = self.ylims
+#         asy   = self.asy
+#         xlims = self.xlims
+#         ylims = self.ylims
 
-        if picture is None:
-            picture = self._picture()
+#         if picture is None:
+#             picture = self._picture()
 
-        if xlims is None:
-            xlims = [self.plots[-1]['bounds']['min'][0],
-                     self.plots[-1]['bounds']['max'][0]]
+#         if xlims is None:
+#             xlims = [self.plots[-1]['bounds']['min'][0],
+#                      self.plots[-1]['bounds']['max'][0]]
 
-        if ylims is None:
-            ylims = [self.plots[-1]['bounds']['min'][1],
-                     self.plots[-1]['bounds']['max'][1]]
+#         if ylims is None:
+#             ylims = [self.plots[-1]['bounds']['min'][1],
+#                      self.plots[-1]['bounds']['max'][1]]
 
-        asy.send('real x1 = %lf' % xlims[0])
-        asy.send('real x2 = %lf' % xlims[1])
+#         asy.send('real x1 = %lf' % xlims[0])
+#         asy.send('real x2 = %lf' % xlims[1])
 
-        asy.send('real y1 = %lf' % ylims[0])
-        asy.send('real y2 = %lf' % ylims[1])
+#         asy.send('real y1 = %lf' % ylims[0])
+#         asy.send('real y2 = %lf' % ylims[1])
 
-        # title
+#         # title
 
-        asy.send('''xaxis(%(pic)s,
-                          Label("%(title)s", MidPoint, N),
-                          YEquals(y2),
-                          x1, x2, above=true
-                          )'''
-                 % { 'pic': picture, 'title': title } )
+#         asy.send('''xaxis(%(pic)s,
+#                           Label("%(title)s", MidPoint, N),
+#                           YEquals(y2),
+#                           x1, x2, above=true
+#                           )'''
+#                  % { 'pic': picture, 'title': title } )
 
 
-        # x ticks and axis
-        ticks = xticks[0] + self._dict_to_arguments(xticks[1])
+#         # x ticks and axis
+#         ticks = xticks[0] + self._dict_to_arguments(xticks[1])
 
-        asy.send('''xaxis(%(pic)s,
-                          Label("%(xlabel)s", MidPoint, S),
-                          YEquals(y1),
-                          x1, x2,
-                          %(ticks)s,
-                          above=true
-                          )'''
-                 % { 'pic': picture,
-                     'xlabel': xlabel,
-                     'ticks': ticks })
-
-        # y ticks and axis
-        ticks = yticks[0] + self._dict_to_arguments(yticks[1])
-
-        asy.send('''yaxis(%(pic)s,
-                          "%(ylabel)s",
-                          LeftRight,
-                          y1, y2,
-                          %(ticks)s,
-                          above=true
-                          )'''
-                 % { 'pic': picture,
-                     'ylabel': ylabel,
-                     'ticks': ticks })
+#         asy.send('''xaxis(%(pic)s,
+#                           Label("%(xlabel)s", MidPoint, S),
+#                           YEquals(y1),
+#                           x1, x2,
+#                           %(ticks)s,
+#                           above=true
+#                           )'''
+#                  % { 'pic': picture,
+#                      'xlabel': xlabel,
+#                      'ticks': ticks })
+
+#         # y ticks and axis
+#         ticks = yticks[0] + self._dict_to_arguments(yticks[1])
+
+#         asy.send('''yaxis(%(pic)s,
+#                           "%(ylabel)s",
+#                           LeftRight,
+#                           y1, y2,
+#                           %(ticks)s,
+#                           above=true
+#                           )'''
+#                  % { 'pic': picture,
+#                      'ylabel': ylabel,
+#                      'ticks': ticks })
 
-        self._bounds(xlims, ylims)
+#         self._bounds(xlims, ylims)
 
 
-    ##################################################################
+#     ##################################################################
 
-    def axis(self, title='',
-             xlabel='$x$', ylabel='',
-             ylims=None,                # XXX: move elsewhere?
-             xticks=('LeftTicks', {}),
-             yticks=('RightTicks', {}),
-             picture=None,
-             **kwargs):
-        """Label the current plot and axis.
+#     def axis(self, title='',
+#              xlabel='$x$', ylabel='',
+#              ylims=None,                # XXX: move elsewhere?
+#              xticks=('LeftTicks', {}),
+#              yticks=('RightTicks', {}),
+#              picture=None,
+#              **kwargs):
+#         """Label the current plot and axis.
 
-           **Arguments**
+#            **Arguments**
 
-           * *title* - plot title.
+#            * *title* - plot title.
 
-           * *xlabel* - x-axis label.
+#            * *xlabel* - x-axis label.
 
-           * *ylabel* - y-axis label.
+#            * *ylabel* - y-axis label.
 
-           * *xticks* - tuple (*type*, *options*) where *type* is the
-              name of an Asymptote tick constructor (eg, 'LeftTicks'),
-              and *options* is a dictionary of options (keys) and
-              values that are passed to the tick constructor.
+#            * *xticks* - tuple (*type*, *options*) where *type* is the
+#               name of an Asymptote tick constructor (eg, 'LeftTicks'),
+#               and *options* is a dictionary of options (keys) and
+#               values that are passed to the tick constructor.
 
-           * *yticks* - as above.
+#            * *yticks* - as above.
 
-           """
+#            """
 
-        asy   = self.asy
-        xlims = self.xlims
+#         asy   = self.asy
+#         xlims = self.xlims
 
-        if picture is None:
-            picture = self._picture()
+#         if picture is None:
+#             picture = self._picture()
 
-        if xlims is None:
-            xlims = [self.plots[-1]['bounds']['min'][0],
-                     self.plots[-1]['bounds']['max'][0]]
+#         if xlims is None:
+#             xlims = [self.plots[-1]['bounds']['min'][0],
+#                      self.plots[-1]['bounds']['max'][0]]
 
-        if ylims is None:
-            ylims = [self.plots[-1]['bounds']['min'][1],
-                     self.plots[-1]['bounds']['max'][1]]
+#         if ylims is None:
+#             ylims = [self.plots[-1]['bounds']['min'][1],
+#                      self.plots[-1]['bounds']['max'][1]]
 
-        asy.send('real x1 = %lf' % xlims[0])
-        asy.send('real x2 = %lf' % xlims[1])
+#         asy.send('real x1 = %lf' % xlims[0])
+#         asy.send('real x2 = %lf' % xlims[1])
 
-        asy.send('real y1 = %lf' % ylims[0])
-        asy.send('real y2 = %lf' % ylims[1])
+#         asy.send('real y1 = %lf' % ylims[0])
+#         asy.send('real y2 = %lf' % ylims[1])
 
-        asy.send('''xaxis(%(pic)s,
-                          Label("%(title)s", MidPoint, N),
-                          YEquals(y2),
-                          x1, x2, above=true
-                          )'''
-                 % { 'pic': picture, 'title': title } )
+#         asy.send('''xaxis(%(pic)s,
+#                           Label("%(title)s", MidPoint, N),
+#                           YEquals(y2),
+#                           x1, x2, above=true
+#                           )'''
+#                  % { 'pic': picture, 'title': title } )
 
 
-        # x ticks
-        ticks = xticks[0] + self._dict_to_arguments(xticks[1])
+#         # x ticks
+#         ticks = xticks[0] + self._dict_to_arguments(xticks[1])
 
-        asy.send('''xaxis(%(pic)s,
-                          Label("%(xlabel)s", MidPoint, S),
-                          YEquals(y1),
-                          x1, x2,
-                          %(ticks)s,
-                          above=true
-                          )'''
-                 % { 'pic': picture,
-                     'xlabel': xlabel,
-                     'ticks': ticks })
+#         asy.send('''xaxis(%(pic)s,
+#                           Label("%(xlabel)s", MidPoint, S),
+#                           YEquals(y1),
+#                           x1, x2,
+#                           %(ticks)s,
+#                           above=true
+#                           )'''
+#                  % { 'pic': picture,
+#                      'xlabel': xlabel,
+#                      'ticks': ticks })
 
-        # y ticks
-        ticks = yticks[0] + self._dict_to_arguments(yticks[1])
+#         # y ticks
+#         ticks = yticks[0] + self._dict_to_arguments(yticks[1])
 
-        asy.send('''yaxis(%(pic)s,
-                          "%(ylabel)s",
-                          LeftRight,
-                          y1, y2,
-                          %(ticks)s,
-                          above=true
-                          )'''
-                 % { 'pic': picture,
-                     'ylabel': ylabel,
-                     'ticks': ticks })
-
-        # pallete
-        if self.palette:
-            asy.send(self.palette)
-            self.palette = False
-
-        self._bounds(xlims, ylims)
-
-
-
-    ##################################################################
-
-    def caption(self, caption='', label='',
-                includegraphics_options='', **kwargs):
-        """Set caption used for LaTeX export (see *shipout*
-           method)."""
-
-        self.caption = caption
-        self.label = label
-        self.includegraphics_options = includegraphics_options
-
-        self.export_tex = True
-
-
-    ##################################################################
-
-    def shipout(self, basename='plot', format='pdf'):
-        """Shipout the current plot(s).
-
-           The current plot(s) is rendered and output to the file
-           *basename.format* (eg, ``plot.pdf``).
-
-           If a caption was set, the LaTeX commands for including and
-           annotating the plot (in a LaTeX *figure* environment) are
-           output to *basename*.tex (eg, ``plot.tex``).
-
-           """
-
-        asy = self.asy
-
-        for i, p in enumerate(self.plots):
-            picture = 'p%d' % (i+1)
-            frame = 'f%d' % (i+1)
-            shift = '(%lf*inch,%lf*inch)' % p['shift']
-
-            w, h, k = p['size']
-            k = str(k).lower()
-            w = str(w) + '*inch'
-            h = str(h) + '*inch'
-
-            bl = str(p['bounds']['min'])
-            ur = str(p['bounds']['max'])
-            dx = str(p['bounds']['max'][0] - p['bounds']['min'][0])
-            dy = str(p['bounds']['max'][1] - p['bounds']['min'][1])
-
-            # XXX: aspect!
-            #asy.send('size(%s, %s, %s, %s, %s, %s)' % (picture, w, h, bl, ur, k))
-            asy.send('size(%s, %s, %s, %s, %s)' % (picture, w, h, bl, ur))
-            asy.send('frame %(frame)s = shift(%(x)s*%(w)s/%(dx)s, %(y)s*%(h)s/%(dy)s)*%(picture)s.fit()'
-                     % {'frame': frame,
-                        'picture': picture,
-                        'x': str(-p['bounds']['min'][0]),
-                        'y': str(-p['bounds']['min'][1]),
-                        'w': w, 'h': h, 'dx': dx, 'dy': dy })
-
-
-            self.asy.send('add(shift(%s)*%s)'
-                          % (shift, frame))
-
-        self.asy.send('shipout("%s", "%s")' % (basename, format))
-        self.asy.close()
-
-        if self.export_tex:
-
-            caption = self.caption
-            label   = self.label
-            options = self.includegraphics_options
-
-            f = open('%s.tex' % (basename), 'w')
-
-            if options:
-                f.write(textwrap.dedent(
-                    '''\
-                    \\begin{figure}
-                      \\centering
-                      \\includegraphics[%(options)s]{plots/%(basename)s}
-                      \\caption{%(caption)s}
-                      \\label{%(label)s}
-                    \\end{figure}
-                    ''' % { 'basename': basename,
-                            'options': options,
-                            'caption': caption,
-                            'label': label
-                            }  ))
-            else:
-                f.write(textwrap.dedent(
-                    '''\
-                    \\begin{figure}
-                      \\centering
-                      \\includegraphics{plots/%(basename)s}
-                      \\caption{%(caption)s}
-                      \\label{%(label)s}
-                    \\end{figure}
-                    ''' % { 'basename': basename,
-                            'caption': caption,
-                            'label': label
-                            }  ))
-
-            f.close()
-
-            self.export_tex = False
+#         asy.send('''yaxis(%(pic)s,
+#                           "%(ylabel)s",
+#                           LeftRight,
+#                           y1, y2,
+#                           %(ticks)s,
+#                           above=true
+#                           )'''
+#                  % { 'pic': picture,
+#                      'ylabel': ylabel,
+#                      'ticks': ticks })
+
+#         # pallete
+#         if self.palette:
+#             asy.send(self.palette)
+#             self.palette = False
+
+#         self._bounds(xlims, ylims)
+
+
+
+#     ##################################################################
+
+#     def caption(self, caption='', label='',
+#                 includegraphics_options='', **kwargs):
+#         """Set caption used for LaTeX export (see *shipout*
+#            method)."""
+
+#         self.caption = caption
+#         self.label = label
+#         self.includegraphics_options = includegraphics_options
+
+#         self.export_tex = True
+
+
+#     ##################################################################
+
+#     def shipout(self, basename='plot', format='pdf'):
+#         """Shipout the current plot(s).
+
+#            The current plot(s) is rendered and output to the file
+#            *basename.format* (eg, ``plot.pdf``).
+
+#            If a caption was set, the LaTeX commands for including and
+#            annotating the plot (in a LaTeX *figure* environment) are
+#            output to *basename*.tex (eg, ``plot.tex``).
+
+#            """
+
+#         asy = self.asy
+
+#         for i, p in enumerate(self.plots):
+#             picture = 'p%d' % (i+1)
+#             frame = 'f%d' % (i+1)
+#             shift = '(%lf*inch,%lf*inch)' % p['shift']
+
+#             w, h, k = p['size']
+#             k = str(k).lower()
+#             w = str(w) + '*inch'
+#             h = str(h) + '*inch'
+
+#             bl = str(p['bounds']['min'])
+#             ur = str(p['bounds']['max'])
+#             dx = str(p['bounds']['max'][0] - p['bounds']['min'][0])
+#             dy = str(p['bounds']['max'][1] - p['bounds']['min'][1])
+
+#             # XXX: aspect!
+#             #asy.send('size(%s, %s, %s, %s, %s, %s)' % (picture, w, h, bl, ur, k))
+#             asy.send('size(%s, %s, %s, %s, %s)' % (picture, w, h, bl, ur))
+#             asy.send('frame %(frame)s = shift(%(x)s*%(w)s/%(dx)s, %(y)s*%(h)s/%(dy)s)*%(picture)s.fit()'
+#                      % {'frame': frame,
+#                         'picture': picture,
+#                         'x': str(-p['bounds']['min'][0]),
+#                         'y': str(-p['bounds']['min'][1]),
+#                         'w': w, 'h': h, 'dx': dx, 'dy': dy })
+
+
+#             self.asy.send('add(shift(%s)*%s)'
+#                           % (shift, frame))
+
+#         self.asy.send('shipout("%s", "%s")' % (basename, format))
+#         self.asy.close()
+
+#         if self.export_tex:
+
+#             caption = self.caption
+#             label   = self.label
+#             options = self.includegraphics_options
+
+#             f = open('%s.tex' % (basename), 'w')
+
+#             if options:
+#                 f.write(textwrap.dedent(
+#                     '''\
+#                     \\begin{figure}
+#                       \\centering
+#                       \\includegraphics[%(options)s]{plots/%(basename)s}
+#                       \\caption{%(caption)s}
+#                       \\label{%(label)s}
+#                     \\end{figure}
+#                     ''' % { 'basename': basename,
+#                             'options': options,
+#                             'caption': caption,
+#                             'label': label
+#                             }  ))
+#             else:
+#                 f.write(textwrap.dedent(
+#                     '''\
+#                     \\begin{figure}
+#                       \\centering
+#                       \\includegraphics{plots/%(basename)s}
+#                       \\caption{%(caption)s}
+#                       \\label{%(label)s}
+#                     \\end{figure}
+#                     ''' % { 'basename': basename,
+#                             'caption': caption,
+#                             'label': label
+#                             }  ))
+
+#             f.close()
+
+#             self.export_tex = False
