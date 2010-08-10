@@ -2,12 +2,13 @@
 
 import textwrap
 
+import base
 import asymptote
 
 
 ######################################################################
 
-class Plot(object):
+class Plot(base.Base):
     """PyAsy Asymptote wrapper.
 
        **Basic usage**
@@ -74,88 +75,6 @@ class Plot(object):
 
        """
 
-    def __init__(self,
-                 xlims=None, size=(4,4,False),
-                 defaultpen=None, plotpen=None,
-                 **kwargs):
-
-        # init asy
-        asy = asymptote.Asymptote(**kwargs)
-        asy.send('import graph')
-        asy.send('import contour')
-        asy.send('import palette')
-        asy.send('defaultpen(fontsize(10pt))')
-
-        # init pens
-        if defaultpen is not None:
-            if isinstance(defaultpen, str):
-                defaultpen = [defaultpen]
-
-            asy.send('defaultpen(%s)' % '+'.join(defaultpen))
-
-        if plotpen is not None:
-            if isinstance(plotpen, str):
-                plotpen = [plotpen]
-
-            asy.send('pen plotpen = %s' % '+'.join(plotpen))
-        else:
-            asy.send('pen plotpen = defaultpen')
-
-        # init self
-        self.asy = asy
-        self.xlims = xlims
-        self.size = size
-        self.picture = 0
-        self.plots = []
-        self.palette = False
-        self.export_tex = False
-
-
-    ##################################################################
-
-    def _pen(self, pen, **kwargs):
-
-        if pen is not None:
-            if isinstance(pen, str):
-                pen = ['plotpen'] + pen.split('+')
-            elif isinstance(pen, list):
-                pen.append('plotpen')
-        else:
-            pen = ['plotpen']
-
-        return '+'.join(pen)
-
-
-    def _picture(self, **kwargs):
-
-        if self.picture == 0:
-            self.new_plot(self.size)
-
-        return 'p%d' % (self.picture)
-
-
-    def _filter_and_slurp2(self, x, y, **kwargs):
-
-        if self.xlims is not None:
-            i = x > self.xlims[0]
-            x = x[i]
-            y = y[i]
-
-            i = x < self.xlims[1]
-            x = x[i]
-            y = y[i]
-
-
-        self.asy.slurp2(x, y)
-
-
-    def _filter_and_slurp3(self, x, y, z, **kwargs):
-
-        # XXX: filter...
-
-        self.asy.slurp3(x, y, z)
-
-
     ##################################################################
 
     def axis(self, title='',
@@ -168,18 +87,19 @@ class Plot(object):
 
            **Arguments**
 
-           * *title* - plot title.
+           * *title*: Plot title.
 
-           * *xlabel* - x-axis label.
+           * *xlabel*: x-axis label.
 
-           * *ylabel* - y-axis label.
+           * *ylabel*: y-axis label.
 
-           * *xticks* - tuple (*type*, *options*) where *type* is the
+           * *xticks*: Tuple ``(type, options)`` where *type* is the
               name of an Asymptote tick constructor (eg, 'LeftTicks'),
               and *options* is a dictionary of options (keys) and
-              values that are passed to the tick constructor.
+              values that are passed to the tick constructor.  Please
+              see the Asymptote documentation for more details.
 
-           * *yticks* - as above.
+           * *yticks*: As above.
 
            """
 
@@ -190,14 +110,15 @@ class Plot(object):
         picture = self._picture()
 
         if xlims is None:
-            x = self.x
-            xlims = [x[0], x[-1]]
+            xlims = [self.plots[-1]['bounds']['min'][0],
+                     self.plots[-1]['bounds']['max'][0]]
+
+        if ylims is None:
+            ylims = [self.plots[-1]['bounds']['min'][1],
+                     self.plots[-1]['bounds']['max'][1]]
 
         asy.send('real x1 = %lf' % xlims[0])
         asy.send('real x2 = %lf' % xlims[1])
-
-        if ylims is None:
-            ylims = [y.min(), y.max()]
 
         asy.send('real y1 = %lf' % ylims[0])
         asy.send('real y2 = %lf' % ylims[1])
@@ -211,9 +132,7 @@ class Plot(object):
 
 
         # x ticks
-        t = xticks[0]
-        o = xticks[1]
-        ticks = t + '(' + ','.join(['%s=%s' % (str(k), str(o[k])) for k in o]) + ')'
+        ticks = xticks[0] + self._dict_to_arguments(xticks[1])
 
         asy.send('''xaxis(%(pic)s,
                           Label("%(xlabel)s", MidPoint, S),
@@ -229,7 +148,7 @@ class Plot(object):
         # y ticks
         t = yticks[0]
         o = yticks[1]
-        ticks = t + '(' + ','.join(['%s=%s' % (str(k), str(o[k])) for k in o]) + ')'
+        ticks = yticks[0] + self._dict_to_arguments(yticks[1])
 
         asy.send('''yaxis(%(pic)s,
                           "%(ylabel)s",
@@ -247,12 +166,20 @@ class Plot(object):
             asy.send(self.palette)
             self.palette = False
 
+        self._bounds(xlims, ylims)
+
 
     ##################################################################
 
     def scatter(self, x, y, pen=None, **kwargs):
         """Scatter plot of *y* vs *x* (both of which should be 1d
-           ndarrays)."""
+           ndarrays).
+
+           **Arguments**
+
+           * XXX
+
+           """
 
         picture = self._picture(**kwargs)
         pen = self._pen(pen, **kwargs)
@@ -263,32 +190,40 @@ class Plot(object):
                            { dot(%s, (X[i], Y[i]), %s); }'''
                       % (picture, pen))
 
-        self.x = x
-        self.y = y
-
 
     ##################################################################
 
-    def line(self, x, y, pen=None, **kwargs):
+    def line(self, x, y, pen=None, legend=None, **kwargs):
         """Line plot of *y* vs *x* (both of which should be 1d
-           ndarrays)."""
+           ndarrays).
+
+           **Arguments**
+
+           XXX"""
 
         picture = self._picture(**kwargs)
         pen = self._pen(pen, **kwargs)
 
         self._filter_and_slurp2(x, y)
 
-        self.asy.send('draw(%s, graph(X, Y), %s)' % (picture, pen))
-
-        self.x = x
-        self.y = y
-
+        if legend is not None:
+            self.asy.send('draw(%s, graph(X, Y), %s, legend="%s")'
+                          % (picture, pen, legend))
+        else:
+            self.asy.send('draw(%s, graph(X, Y), %s)'
+                          % (picture, pen))
 
     ##################################################################
 
-    def density(self, x, y, z, bar=False, pen=None,
-                palette='Rainbow(512)', **kwargs):
+    def density(self, x, y, z, pen=None,
+                palette='Rainbow(512)',
+                brange='Full',
+                bar=False,
+                **kwargs):
         """Density (colour filled contour) plot of *z* vs (*x*, *y*).
+
+           The x, y, and z ndarrays are indexed as: ``x[i]``,
+           ``y[j]``, and ``z[i,j]`` respectively.
 
            **Arguments**
 
@@ -299,14 +234,17 @@ class Plot(object):
         picture = self._picture(**kwargs)
         pen = self._pen(pen, **kwargs)
 
-        self._filter_and_slurp3(x, y, z)
+        self._slurp3(x, y, z)
+
+        if isinstance(brange, list):
+            brange = 'Range(%lf, %lf)' % tuple(brange)
 
         self.asy.send('pen[] pal = %s' % palette)
         self.asy.send('pair initial = (%lf, %lf)' % (x[0], y[0]))
         self.asy.send('pair final = (%lf, %lf)' % (x[-1], y[-1]))
         self.asy.send('''bounds range =
-          image(%s, ZZ, initial, final, pal,
-                antialias=true)''' % (picture))
+          image(%s, ZZ, %s, initial, final, pal,
+                antialias=true)''' % (picture, brange))
 
         if bar:
             self.palette = '''
@@ -322,6 +260,41 @@ class Plot(object):
         self.x = x
         self.y = y
         self.z = z
+        self.plots[-1]['bounds'] = {'min': (x.min(), y.min()),
+                                    'max': (x.max(), y.max())}
+
+
+    ##################################################################
+
+    def stepped(self, x, t, y, pen=None,
+                **kwargs):
+        """Consecutive plots of *y* vs *x* for the various values of
+           time in *t*.
+
+           The x, t, and y ndarrays are indexed as: ``x[i]``,
+           ``t[n]``, and ``y[n,i]`` respectively.
+
+           **Arguments**
+
+           * XXX
+
+        """
+
+        picture = self._picture(**kwargs)
+        pen = self._pen(pen, **kwargs)
+
+        self._slurp3(x, t, y)
+
+        self.asy.send('real A[][] = transpose(ZZ)')
+
+        for n in xrange(t.size):
+            self.asy.send('draw(%s, graph(X, A[%d]), %s)' % (picture, n, pen))
+
+        self.x = x
+        self.y = t
+        self.z = y
+        self.plots[-1]['bounds'] = {'min': (x.min(), y.min()),
+                                    'max': (x.max(), y.max())}
 
 
     ##################################################################
@@ -334,7 +307,7 @@ class Plot(object):
 
         self.asy.send('real x1 = %lf' % self.xlims[0])
         self.asy.send('real x2 = %lf' % self.xlims[1])
-        self.asy.send('xaxis(%s, YEquals(%lf, false), x1, x2, %s)'
+        self.asy.send('xaxis(%s, YEquals(%lf, false), x1, x2, %s, above=true)'
                       % (picture, y, pen))
 
 
@@ -347,7 +320,7 @@ class Plot(object):
         pen = self._pen(pen, **kwargs)
 
 
-        self.asy.send('yaxis(%s, XEquals(%lf, false), %s)'
+        self.asy.send('yaxis(%s, XEquals(%lf, false), %s, above=true)'
                       % (picture, x, pen))
 
 
@@ -355,8 +328,13 @@ class Plot(object):
 
     def caption(self, caption='', label='',
                 includegraphics_options='', **kwargs):
-        """Set caption used for LaTeX export (see *shipout*
-           method)."""
+        """Set caption used for LaTeX export (see the *shipout*
+           method).
+
+           **Arguments**
+
+           XXX
+           """
 
         self.caption = caption
         self.label = label
@@ -367,8 +345,38 @@ class Plot(object):
 
     ##################################################################
 
+    def legend(self, position=None, direction=None, **kwargs):
+        """Draw a legend.
+
+           **Arguments**
+
+           XXX
+           """
+
+        picture = self._picture(**kwargs)
+
+        if position is None:
+            position = 'point(E)'
+
+        if direction is None:
+            direction = '10E'
+
+        self.asy.send('''add(%(pic)s, legend(%(pic)s),
+                         %(position)s, %(direction)s, UnFill)'''
+                      % {'pic': picture,
+                         'position': position,
+                         'direction': direction })
+
+
+    ##################################################################
+
     def new_plot(self, size=(4,4,False), shift=(0,0)):
-        """Create a new subplot."""
+        """Create a new subplot.
+
+           **Arguments**
+
+           XXX
+           """
 
         self.plots.append({'size': size, 'shift': shift})
         self.picture = self.picture + 1
@@ -389,17 +397,36 @@ class Plot(object):
 
            """
 
+        asy = self.asy
+
         for i, p in enumerate(self.plots):
             picture = 'p%d' % (i+1)
+            frame = 'f%d' % (i+1)
             shift = '(%lf*inch,%lf*inch)' % p['shift']
 
-            if p['size'][2]:
-                size = '%lf*inch,%lf*inch,true' % (p['size'][0], p['size'][1])
-            else:
-                size = '%lf*inch,%lf*inch,false' % (p['size'][0], p['size'][1])
+            w, h, k = p['size']
+            k = str(k).lower()
+            w = str(w) + '*inch'
+            h = str(h) + '*inch'
 
-            self.asy.send('add(shift(%s)*%s.fit(%s))'
-                          % (shift, picture, size))
+            bl = str(p['bounds']['min'])
+            ur = str(p['bounds']['max'])
+            dx = str(p['bounds']['max'][0] - p['bounds']['min'][0])
+            dy = str(p['bounds']['max'][1] - p['bounds']['min'][1])
+
+            # XXX: aspect!
+            #asy.send('size(%s, %s, %s, %s, %s, %s)' % (picture, w, h, bl, ur, k))
+            asy.send('size(%s, %s, %s, %s, %s)' % (picture, w, h, bl, ur))
+            asy.send('frame %(frame)s = shift(%(x)s*%(w)s/%(dx)s, %(y)s*%(h)s/%(dy)s)*%(picture)s.fit()'
+                     % {'frame': frame,
+                        'picture': picture,
+                        'x': str(-p['bounds']['min'][0]),
+                        'y': str(-p['bounds']['min'][1]),
+                        'w': w, 'h': h, 'dx': dx, 'dy': dy })
+
+
+            self.asy.send('add(shift(%s)*%s)'
+                          % (shift, frame))
 
         self.asy.send('shipout("%s", "%s")' % (basename, format))
         self.asy.close()
