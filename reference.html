@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>PyAsy Reference &mdash; PyAsy v0.2.0 documentation</title>
+    <title>PyAsy Reference &mdash; PyAsy v0.3.0 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.2.0',
+        VERSION:     '0.3.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,9 +19,9 @@
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PyAsy v0.2.0 documentation" href="index.html" />
-    <link rel="next" title="PyAsy Examples" href="examples.html" />
-    <link rel="prev" title="PyAsy" href="index.html" /> 
+    <link rel="top" title="PyAsy v0.3.0 documentation" href="index.html" />
+    <link rel="next" title="Interacting with Asymptote directly" href="asymptote.html" />
+    <link rel="prev" title="PyAsy Examples" href="examples.html" /> 
   </head>
   <body>
     <div class="related">
@@ -34,12 +34,12 @@
           <a href="modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="examples.html" title="PyAsy Examples"
+          <a href="asymptote.html" title="Interacting with Asymptote directly"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="PyAsy"
+          <a href="examples.html" title="PyAsy Examples"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">PyAsy v0.2.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyAsy v0.3.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -119,34 +119,33 @@ pyasy.asymptote.Asymptote constructor.</p>
 <tt class="descname">axis</tt><big>(</big><em>title=''</em>, <em>xlabel='$x$'</em>, <em>ylabel=''</em>, <em>ylims=None</em>, <em>xticks=('LeftTicks'</em>, <em>{})</em>, <em>yticks=('RightTicks'</em>, <em>{})</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.axis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Label the current plot and axis.</p>
 <p><strong>Arguments</strong></p>
-<ul>
-<li><p class="first"><em>title</em>: Plot title.</p>
-</li>
-<li><p class="first"><em>xlabel</em>: x-axis label.</p>
-</li>
-<li><p class="first"><em>ylabel</em>: y-axis label.</p>
-</li>
-<li><dl class="first docutils">
-<dt><em>xticks</em>: Tuple <tt class="docutils literal"><span class="pre">(type,</span> <span class="pre">options)</span></tt> where <em>type</em> is the</dt>
-<dd><p class="first last">name of an Asymptote tick constructor (eg, &#8216;LeftTicks&#8217;),
+<ul class="simple">
+<li><em>title</em>: Plot title.</li>
+<li><em>xlabel</em>: x-axis label.</li>
+<li><em>ylabel</em>: y-axis label.</li>
+<li><em>xticks</em>: Tuple <tt class="docutils literal"><span class="pre">(type,</span> <span class="pre">options)</span></tt> where <em>type</em> is the
+name of an Asymptote tick constructor (eg, &#8216;LeftTicks&#8217;),
 and <em>options</em> is a dictionary of options (keys) and
 values that are passed to the tick constructor.  Please
-see the Asymptote documentation for more details.</p>
-</dd>
-</dl>
-</li>
-<li><p class="first"><em>yticks</em>: As above.</p>
-</li>
+see the <a class="reference external" href="http://asymptote.sf.net/">Asymptote</a> documentation for more details.</li>
+<li><em>yticks</em>: As above.</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyasy.plot.Plot.caption">
 <tt class="descname">caption</tt><big>(</big><em>caption=''</em>, <em>label=''</em>, <em>includegraphics_options=''</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.caption" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set caption used for LaTeX export (see the <em>shipout</em>
-method).</p>
+<dd><p>Set caption used for LaTeX export (see the
+<a title="pyasy.plot.Plot.shipout" class="reference internal" href="#pyasy.plot.Plot.shipout"><tt class="xref docutils literal"><span class="pre">pyasy.plot.Plot.shipout()</span></tt></a> method).</p>
 <p><strong>Arguments</strong></p>
-<p>XXX</p>
+<ul class="simple">
+<li><em>caption</em>: Figure caption (ie, LaTeX
+\caption{<em>caption</em>}).</li>
+<li><em>label</em>: Figure label (ie, LaTeX
+\label{<em>label</em>}).</li>
+<li><em>includegraphics_options</em>: Extra options for
+<em>includegraphics</em> (ie, \includegraphics[<em>options</em>]{}).</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -157,7 +156,23 @@ method).</p>
 <tt class="docutils literal"><span class="pre">y[j]</span></tt>, and <tt class="docutils literal"><span class="pre">z[i,j]</span></tt> respectively.</p>
 <p><strong>Arguments</strong></p>
 <ul class="simple">
-<li>XXX</li>
+<li><em>x</em>: Horizontal coordinates of data values (indexed
+as <tt class="docutils literal"><span class="pre">x[i]</span></tt>).</li>
+<li><em>y</em>: Vertical coordinates of data values (indexed
+as <tt class="docutils literal"><span class="pre">y[j]</span></tt>).</li>
+<li><em>z</em>: Data values (indexed as <tt class="docutils literal"><span class="pre">z[i,j]</span></tt>).</li>
+<li><em>palette</em>: <a class="reference external" href="http://asymptote.sourceforge.net/doc/palette.html">Asymptote palette</a>.</li>
+<li><em>brange</em>: Range for data values (list or Asymptote
+string).</li>
+<li><em>bar</em>: Dictionary to control the display of the
+palette bar with entries:<ul>
+<li><em>initial</em>: Tuple of coordinates for the bottom
+left corner of the bar.</li>
+<li><em>final</em>: Tuple of coordinates for the top
+right corner of the bar.</li>
+<li><em>label</em>: Label for the bar (eg, <tt class="docutils literal"><span class="pre">'$z$'</span></tt>).</li>
+</ul>
+</li>
 </ul>
 </dd></dl>
 
@@ -171,7 +186,10 @@ method).</p>
 <tt class="descname">legend</tt><big>(</big><em>position=None</em>, <em>direction=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.legend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a legend.</p>
 <p><strong>Arguments</strong></p>
-<p>XXX</p>
+<ul class="simple">
+<li><em>position</em>: XXX</li>
+<li><em>direction</em>: XXX</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -180,7 +198,14 @@ method).</p>
 <dd><p>Line plot of <em>y</em> vs <em>x</em> (both of which should be 1d
 ndarrays).</p>
 <p><strong>Arguments</strong></p>
-<p>XXX</p>
+<ul class="simple">
+<li><em>x</em>: Horizontal coordinates of data points.</li>
+<li><em>y</em>: Vertical coordinates of data points.</li>
+<li><em>pen</em>: Asymptote pen (array or &#8216;+&#8217; delimited string).
+Defaults to <em>plotpen</em>.</li>
+<li><em>legend</em>: Asymptote legend key
+(see <a title="pyasy.plot.Plot.legend" class="reference internal" href="#pyasy.plot.Plot.legend"><tt class="xref docutils literal"><span class="pre">pyasy.plot.Plot.legend()</span></tt></a>).</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -188,7 +213,10 @@ ndarrays).</p>
 <tt class="descname">new_plot</tt><big>(</big><em>size=(4</em>, <em>4</em>, <em>False)</em>, <em>shift=(0</em>, <em>0)</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.new_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new subplot.</p>
 <p><strong>Arguments</strong></p>
-<p>XXX</p>
+<ul class="simple">
+<li><em>size</em>: XXX</li>
+<li><em>shift</em>: XXX</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -198,7 +226,10 @@ ndarrays).</p>
 ndarrays).</p>
 <p><strong>Arguments</strong></p>
 <ul class="simple">
-<li>XXX</li>
+<li><em>x</em>: Horizontal coordinates of data points.</li>
+<li><em>y</em>: Vertical coordindates of data points.</li>
+<li><em>pen</em>: Asymptote pen (array or &#8216;+&#8217; delimited string).
+Defaults to <em>plotpen</em>.</li>
 </ul>
 </dd></dl>
 
@@ -210,20 +241,8 @@ ndarrays).</p>
 <em>basename.format</em> (eg, <tt class="docutils literal"><span class="pre">plot.pdf</span></tt>).</p>
 <p>If a caption was set, the LaTeX commands for including and
 annotating the plot (in a LaTeX <em>figure</em> environment) are
-output to <em>basename</em>.tex (eg, <tt class="docutils literal"><span class="pre">plot.tex</span></tt>).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pyasy.plot.Plot.stepped">
-<tt class="descname">stepped</tt><big>(</big><em>x</em>, <em>t</em>, <em>y</em>, <em>pen=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.plot.Plot.stepped" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consecutive plots of <em>y</em> vs <em>x</em> for the various values of
-time in <em>t</em>.</p>
-<p>The x, t, and y ndarrays are indexed as: <tt class="docutils literal"><span class="pre">x[i]</span></tt>,
-<tt class="docutils literal"><span class="pre">t[n]</span></tt>, and <tt class="docutils literal"><span class="pre">y[n,i]</span></tt> respectively.</p>
-<p><strong>Arguments</strong></p>
-<ul class="simple">
-<li>XXX</li>
-</ul>
+output to <em>basename</em>.tex (eg, <tt class="docutils literal"><span class="pre">plot.tex</span></tt>).  See
+<a title="pyasy.plot.Plot.caption" class="reference internal" href="#pyasy.plot.Plot.caption"><tt class="xref docutils literal"><span class="pre">pyasy.plot.Plot.caption()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -250,16 +269,17 @@ False when shipping out the animation.</p>
 <p>To include a multipage animation in a LaTeX document, you must
 include the <em>animate</em> package in the preamble:</p>
 <blockquote>
-usepackage{animate}</blockquote>
+\usepackage{animate}</blockquote>
 <p>and use the <em>animategraphics</em> macro in the body:</p>
 <blockquote>
-nimategraphics[controls]{12}{filename}{}{}.</blockquote>
+\animategraphics[controls]{12}{filename}{}{}.</blockquote>
 <p><strong>Basic usage</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyasy.animation</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">pyasy</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">Animation</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mf">4</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="bp">False</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>XXX</p>
+<p><strong>Methods</strong></p>
 <dl class="method">
 <dt id="pyasy.animation.Animation.animate">
 <tt class="descname">animate</tt><big>(</big><em>x</em>, <em>t</em>, <em>y</em>, <em>pen=None</em>, <em>xlabel='$x$'</em>, <em>ylabel=''</em>, <em>xticks=('LeftTicks'</em>, <em>{})</em>, <em>yticks=('RightTicks'</em>, <em>{})</em>, <em>xlims=None</em>, <em>ylims=None</em>, <em>tlabel=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.animation.Animation.animate" title="Permalink to this definition">¶</a></dt>
@@ -318,16 +338,19 @@ semicolon is added automatically.</dd></dl>
 <dt id="pyasy.asymptote.Asymptote.slurp2">
 <tt class="descname">slurp2</tt><big>(</big><em>x</em>, <em>y</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.asymptote.Asymptote.slurp2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send the <em>x</em> and <em>y</em> ndarrays to the Asymptote engine.</p>
-<p>The slurpped data is stored, in Asymptote, in the 2d <tt class="docutils literal"><span class="pre">xy</span></tt>
-array.</p>
+<p>The slurpped data is stored, in Asymptote, in the <tt class="docutils literal"><span class="pre">X</span></tt> and
+<tt class="docutils literal"><span class="pre">Y</span></tt> arrays (of type <tt class="docutils literal"><span class="pre">real</span></tt>).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyasy.asymptote.Asymptote.slurp3">
 <tt class="descname">slurp3</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#pyasy.asymptote.Asymptote.slurp3" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send the <em>x</em>, <em>y</em>, and <em>z</em> ndarrays to the Asymptote engine.</p>
-<p>The slurpped data is stored, in Asymptote, in the 2d <tt class="docutils literal"><span class="pre">xy</span></tt>
-array and the 2d <tt class="docutils literal"><span class="pre">z</span></tt> array.</p>
+<p>The slurpped data is stored, in Asymptote, in the <tt class="docutils literal"><span class="pre">X</span></tt>,
+<tt class="docutils literal"><span class="pre">Y</span></tt>, and <tt class="docutils literal"><span class="pre">Z</span></tt> arrays (of type <tt class="docutils literal"><span class="pre">real</span></tt>).  The arrays are
+indexed as <tt class="docutils literal"><span class="pre">X[i]</span></tt>, <tt class="docutils literal"><span class="pre">Y[j]</span></tt>, and <tt class="docutils literal"><span class="pre">Z[i*Y.length+j]</span></tt>
+respectively.  Another two-dimensional array <tt class="docutils literal"><span class="pre">ZZ</span></tt> is
+created for convenience and is indexed as <tt class="docutils literal"><span class="pre">ZZ[i][j]</span></tt>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -363,11 +386,11 @@ array and the 2d <tt class="docutils literal"><span class="pre">z</span></tt> ar
 </ul>
 
             <h4>Previous topic</h4>
-            <p class="topless"><a href="index.html"
-                                  title="previous chapter">PyAsy</a></p>
-            <h4>Next topic</h4>
             <p class="topless"><a href="examples.html"
-                                  title="next chapter">PyAsy Examples</a></p>
+                                  title="previous chapter">PyAsy Examples</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="asymptote.html"
+                                  title="next chapter">Interacting with Asymptote directly</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="_sources/reference.txt"
@@ -400,12 +423,12 @@ array and the 2d <tt class="docutils literal"><span class="pre">z</span></tt> ar
           <a href="modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="examples.html" title="PyAsy Examples"
+          <a href="asymptote.html" title="Interacting with Asymptote directly"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="PyAsy"
+          <a href="examples.html" title="PyAsy Examples"
              >previous</a> |</li>
-        <li><a href="index.html">PyAsy v0.2.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyAsy v0.3.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
