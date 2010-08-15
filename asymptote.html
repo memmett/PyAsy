@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Interacting with Asymptote directly &mdash; PyAsy v0.3.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.3.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyAsy v0.3.0 documentation" href="index.html" />
+    <link rel="next" title="Downloading and installing" href="download.html" />
+    <link rel="prev" title="PyAsy Reference" href="reference.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="download.html" title="Downloading and installing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="reference.html" title="PyAsy Reference"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PyAsy v0.3.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="interacting-with-asymptote-directly">
+<h1>Interacting with Asymptote directly<a class="headerlink" href="#interacting-with-asymptote-directly" title="Permalink to this headline">¶</a></h1>
+<p>PyAsy communicates with Asymptote through the
+<a title="pyasy.asymptote.Asymptote" class="reference external" href="reference.html#pyasy.asymptote.Asymptote"><tt class="xref docutils literal"><span class="pre">pyasy.asymptote.Asymptote</span></tt></a> class.  Each of the PyAsy plotting
+classes create an instance of this object called <tt class="docutils literal"><span class="pre">asy</span></tt> when created.
+For more complicated plots you might need to send commands directly to
+the Asymptote engine by using the <tt class="docutils literal"><span class="pre">send</span></tt> method.  Alternatively, you
+can instantiate an <tt class="docutils literal"><span class="pre">Asymptote</span></tt> object directly and roll your own
+plots.</p>
+<p>For example, to tweak a PyAsy plot:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">pyasy</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">Plot</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">asy</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&#39;label(&quot;maximum&quot;, (2.0, 4.0), N)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively, to roll your own:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">asy</span> <span class="o">=</span> <span class="n">pyasy</span><span class="o">.</span><span class="n">asymptote</span><span class="o">.</span><span class="n">Asymptote</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asy</span><span class="o">.</span><span class="n">slurp2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asy</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&#39;&#39;&#39;draw(graph(X,Y))&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asy</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&#39;label(&quot;maximum&quot;, (2.0, 4.0), N)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Data is sent to the Asymptote engine through the <tt class="docutils literal"><span class="pre">slurp2(x,</span> <span class="pre">y)</span></tt> and
+<tt class="docutils literal"><span class="pre">slurp3(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></tt> methods of the <tt class="docutils literal"><span class="pre">Asymptote</span></tt> object.  These
+methods store the <tt class="docutils literal"><span class="pre">x</span></tt>, <tt class="docutils literal"><span class="pre">y</span></tt>, and <tt class="docutils literal"><span class="pre">z</span></tt> Python arrays in the <tt class="docutils literal"><span class="pre">X</span></tt>,
+<tt class="docutils literal"><span class="pre">Y</span></tt>, and <tt class="docutils literal"><span class="pre">Z</span></tt> Asymptote arrays, respectively.  For the slurp2
+method, the arrays are indexed as <tt class="docutils literal"><span class="pre">X[i]</span></tt> and <tt class="docutils literal"><span class="pre">Y[i]</span></tt>.  For the
+slurp3 method, the arrays are indexed as <tt class="docutils literal"><span class="pre">X[i]</span></tt>, <tt class="docutils literal"><span class="pre">Y[j]</span></tt>, and
+<tt class="docutils literal"><span class="pre">Z[i*Y.length+j]</span></tt>.  Finally, for the slurp3 method, a
+two-dimensional Asymptote array <tt class="docutils literal"><span class="pre">ZZ</span></tt> is created for convenience and
+is indexed as <tt class="docutils literal"><span class="pre">ZZ[i][j]</span></tt>.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="reference.html"
+                                  title="previous chapter">PyAsy Reference</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="download.html"
+                                  title="next chapter">Downloading and installing</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/asymptote.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="download.html" title="Downloading and installing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="reference.html" title="PyAsy Reference"
+             >previous</a> |</li>
+        <li><a href="index.html">PyAsy v0.3.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Matthew Emmett.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.2.
+    </div>
+  </body>
+</html>
