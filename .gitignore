@@ -17,6 +17,7 @@ PyAsy*
 
 # examples
 *.pdf
+*.png
 *.dat
 
 # tex

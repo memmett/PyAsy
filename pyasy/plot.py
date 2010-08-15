@@ -295,42 +295,6 @@ class Plot(base.Base):
 
     ##################################################################
 
-#     def stepped(self, x, t, y, dy=0.0,
-#                 pen=None, **kwargs):
-#         """Consecutive plots of *y* vs *x* for the various values of
-#            time in *t*.
-
-#            The x, t, and y ndarrays are indexed as: ``x[i]``,
-#            ``t[n]``, and ``y[n,i]`` respectively.
-
-#            **Arguments**
-
-#            * XXX
-
-#         """
-
-#         picture = self._picture(**kwargs)
-#         pen = self._pen(pen, **kwargs)
-
-#         self._slurp3(x, t, y)
-
-#         self.asy.send('real A[][] = transpose(ZZ)')
-
-#         for n in xrange(t.size):
-#             self.asy.send('int n = %d' % n)
-#             self.asy.send('''for (int i=0; i<X.length; ++i)
-#                                A[n][i] = A[n][i] + n * %f''' % dy)
-#             self.asy.send('draw(%s, graph(X, A[n]), %s)' % (picture, pen))
-
-#         self.x = x
-#         self.y = t
-#         self.z = y
-#         self.plots[-1]['bounds'] = {'min': (x.min(), y.min()),
-#                                     'max': (x.max(), y.max())}
-
-
-    ##################################################################
-
     def horizontal_line(self, y=0.0, pen='plotpen+dotted', **kwargs):
         """Draw a horizontal line at *y* on the graph."""
 
