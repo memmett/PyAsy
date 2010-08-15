@@ -6,6 +6,7 @@ In short: Python + NumPy + Asymptote = PyAsy.
 
 **News**
 
+* August 15 2010: PyAsy version 0.3.0 released.
 * August 10 2010: PyAsy now supports animated plots.
 * May 30 2010: PyAsy now supports density (filled contour) plots.
 * April 29 2010: PyAsy version 0.1.0 released.
