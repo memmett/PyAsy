@@ -1,4 +1,4 @@
-What's news in PyAsy?
-=====================
+What's new in PyAsy?
+====================
 
 Nothing yet...

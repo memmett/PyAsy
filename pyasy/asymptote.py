@@ -86,8 +86,8 @@ class Asymptote(object):
     def slurp2(self, x, y, **kwargs):
         """Send the *x* and *y* ndarrays to the Asymptote engine.
 
-           The slurpped data is stored, in Asymptote, in the 2d ``xy``
-           array.
+           The slurpped data is stored, in Asymptote, in the ``X`` and
+           ``Y`` arrays (of type ``real``).
 
            """
 
@@ -107,8 +107,11 @@ class Asymptote(object):
     def slurp3(self, x, y, z, **kwargs):
         """Send the *x*, *y*, and *z* ndarrays to the Asymptote engine.
 
-           The slurpped data is stored, in Asymptote, in the 2d ``xy``
-           array and the 2d ``z`` array.
+           The slurpped data is stored, in Asymptote, in the ``X``,
+           ``Y``, and ``Z`` arrays (of type ``real``).  The arrays are
+           indexed as ``X[i]``, ``Y[j]``, and ``Z[i*Y.length+j]``
+           respectively.  Another two-dimensional array ``ZZ`` is
+           created for convenience and is indexed as ``ZZ[i][j]``.
 
            """
 

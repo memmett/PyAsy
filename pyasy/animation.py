@@ -19,11 +19,11 @@ class Animation(base.Base):
        To include a multipage animation in a LaTeX document, you must
        include the *animate* package in the preamble:
 
-         \usepackage{animate}
+         \\\\usepackage{animate}
 
        and use the *animategraphics* macro in the body:
 
-         \animategraphics[controls]{12}{filename}{}{}.
+         \\\\animategraphics[controls]{12}{filename}{}{}.
 
 
        **Basic usage**
@@ -32,6 +32,8 @@ class Animation(base.Base):
        >>> a = pyasy.animation.Animation(size=(4, 1.2, False))
 
        XXX
+
+       **Methods**
 
        """
 

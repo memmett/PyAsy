@@ -1,7 +1,7 @@
 PyAsy
 =====
 
-PyAsy is a Python wrapper of the Asymptote_ vector graphics language.
+PyAsy is a Python frontend to the Asymptote_ vector graphics language.
 In short: Python + NumPy + Asymptote = PyAsy.
 
 **News**
@@ -23,6 +23,7 @@ Documentation
 
 * :doc:`Examples <examples>` - some examples.
 * :doc:`Reference <reference>` - reference documentation.
+* :doc:`Asymptote commands <asymptote>` - interacting with Asymptote directly.
 
 
 Download
@@ -46,10 +47,11 @@ please see the `PyAsy project page`_.
    :hidden:
 
    self
-   reference
    examples
-   whatsnew
+   reference
+   asymptote
    download
+   whatsnew
 
 .. _`PyAsy project page`: http://github.com/memmett/PyAsy
 .. _`Matthew Emmett`: http://www.math.ualberta.ca/~memmett/

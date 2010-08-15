@@ -94,12 +94,14 @@ class Plot(base.Base):
            * *ylabel*: y-axis label.
 
            * *xticks*: Tuple ``(type, options)`` where *type* is the
-              name of an Asymptote tick constructor (eg, 'LeftTicks'),
-              and *options* is a dictionary of options (keys) and
-              values that are passed to the tick constructor.  Please
-              see the Asymptote documentation for more details.
+             name of an Asymptote tick constructor (eg, 'LeftTicks'),
+             and *options* is a dictionary of options (keys) and
+             values that are passed to the tick constructor.  Please
+             see the Asymptote_ documentation for more details.
 
            * *yticks*: As above.
+
+           .. _`Asymptote`: http://asymptote.sf.net/
 
            """
 
@@ -177,7 +179,10 @@ class Plot(base.Base):
 
            **Arguments**
 
-           * XXX
+           * *x*: Horizontal coordinates of data points.
+           * *y*: Vertical coordindates of data points.
+           * *pen*: Asymptote pen (array or '+' delimited string).
+             Defaults to *plotpen*.
 
            """
 
@@ -199,7 +204,14 @@ class Plot(base.Base):
 
            **Arguments**
 
-           XXX"""
+           * *x*: Horizontal coordinates of data points.
+           * *y*: Vertical coordinates of data points.
+           * *pen*: Asymptote pen (array or '+' delimited string).
+             Defaults to *plotpen*.
+           * *legend*: Asymptote legend key
+             (see :func:`pyasy.plot.Plot.legend`).
+
+           """
 
         picture = self._picture(**kwargs)
         pen = self._pen(pen, **kwargs)
@@ -227,7 +239,24 @@ class Plot(base.Base):
 
            **Arguments**
 
-           * XXX
+           * *x*: Horizontal coordinates of data values (indexed
+             as ``x[i]``).
+           * *y*: Vertical coordinates of data values (indexed
+             as ``y[j]``).
+           * *z*: Data values (indexed as ``z[i,j]``).
+           * *palette*: `Asymptote palette`_.
+           * *brange*: Range for data values (list or Asymptote
+             string).
+           * *bar*: Dictionary to control the display of the
+             palette bar with entries:
+
+             * *initial*: Tuple of coordinates for the bottom
+               left corner of the bar.
+             * *final*: Tuple of coordinates for the top
+               right corner of the bar.
+             * *label*: Label for the bar (eg, ``'$z$'``).
+
+           .. _`Asymptote palette`: http://asymptote.sourceforge.net/doc/palette.html
 
         """
 
@@ -266,35 +295,38 @@ class Plot(base.Base):
 
     ##################################################################
 
-    def stepped(self, x, t, y, pen=None,
-                **kwargs):
-        """Consecutive plots of *y* vs *x* for the various values of
-           time in *t*.
+#     def stepped(self, x, t, y, dy=0.0,
+#                 pen=None, **kwargs):
+#         """Consecutive plots of *y* vs *x* for the various values of
+#            time in *t*.
 
-           The x, t, and y ndarrays are indexed as: ``x[i]``,
-           ``t[n]``, and ``y[n,i]`` respectively.
+#            The x, t, and y ndarrays are indexed as: ``x[i]``,
+#            ``t[n]``, and ``y[n,i]`` respectively.
 
-           **Arguments**
+#            **Arguments**
 
-           * XXX
+#            * XXX
 
-        """
+#         """
 
-        picture = self._picture(**kwargs)
-        pen = self._pen(pen, **kwargs)
+#         picture = self._picture(**kwargs)
+#         pen = self._pen(pen, **kwargs)
 
-        self._slurp3(x, t, y)
+#         self._slurp3(x, t, y)
 
-        self.asy.send('real A[][] = transpose(ZZ)')
+#         self.asy.send('real A[][] = transpose(ZZ)')
 
-        for n in xrange(t.size):
-            self.asy.send('draw(%s, graph(X, A[%d]), %s)' % (picture, n, pen))
+#         for n in xrange(t.size):
+#             self.asy.send('int n = %d' % n)
+#             self.asy.send('''for (int i=0; i<X.length; ++i)
+#                                A[n][i] = A[n][i] + n * %f''' % dy)
+#             self.asy.send('draw(%s, graph(X, A[n]), %s)' % (picture, pen))
 
-        self.x = x
-        self.y = t
-        self.z = y
-        self.plots[-1]['bounds'] = {'min': (x.min(), y.min()),
-                                    'max': (x.max(), y.max())}
+#         self.x = x
+#         self.y = t
+#         self.z = y
+#         self.plots[-1]['bounds'] = {'min': (x.min(), y.min()),
+#                                     'max': (x.max(), y.max())}
 
 
     ##################################################################
@@ -328,12 +360,18 @@ class Plot(base.Base):
 
     def caption(self, caption='', label='',
                 includegraphics_options='', **kwargs):
-        """Set caption used for LaTeX export (see the *shipout*
-           method).
+        """Set caption used for LaTeX export (see the
+           :func:`pyasy.plot.Plot.shipout` method).
 
            **Arguments**
 
-           XXX
+           * *caption*: Figure caption (ie, LaTeX
+             \\\\caption{*caption*}).
+           * *label*: Figure label (ie, LaTeX
+             \\\\label{*label*}).
+           * *includegraphics_options*: Extra options for
+             *includegraphics* (ie, \\\\includegraphics[*options*]{}).
+
            """
 
         self.caption = caption
@@ -350,7 +388,9 @@ class Plot(base.Base):
 
            **Arguments**
 
-           XXX
+           * *position*: XXX
+           * *direction*: XXX
+
            """
 
         picture = self._picture(**kwargs)
@@ -375,7 +415,9 @@ class Plot(base.Base):
 
            **Arguments**
 
-           XXX
+           * *size*: XXX
+           * *shift*: XXX
+
            """
 
         self.plots.append({'size': size, 'shift': shift})
@@ -393,7 +435,8 @@ class Plot(base.Base):
 
            If a caption was set, the LaTeX commands for including and
            annotating the plot (in a LaTeX *figure* environment) are
-           output to *basename*.tex (eg, ``plot.tex``).
+           output to *basename*.tex (eg, ``plot.tex``).  See
+           :func:`pyasy.plot.Plot.caption`.
 
            """
 
