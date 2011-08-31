@@ -2,6 +2,8 @@
 
 import textwrap
 
+import numpy as np
+
 import base
 import asymptote
 
@@ -168,7 +170,7 @@ class Plot(base.Base):
             asy.send(self.palette)
             self.palette = False
 
-        self._bounds(xlims, ylims)
+        self._bounds(np.array(xlims), np.array(ylims))
 
 
     ##################################################################
@@ -186,6 +188,8 @@ class Plot(base.Base):
 
            """
 
+        # XXX: this should use markers (as in ``line`` below)
+
         picture = self._picture(**kwargs)
         pen = self._pen(pen, **kwargs)
 
@@ -198,7 +202,7 @@ class Plot(base.Base):
 
     ##################################################################
 
-    def line(self, x, y, pen=None, legend=None, **kwargs):
+    def line(self, x, y, pen=None, legend=None, marker=None, **kwargs):
         """Line plot of *y* vs *x* (both of which should be 1d
            ndarrays).
 
@@ -218,12 +222,59 @@ class Plot(base.Base):
 
         self._filter_and_slurp2(x, y)
 
+        command = 'draw(%s, graph(X, Y), %s' % (picture, pen)
+
         if legend is not None:
-            self.asy.send('draw(%s, graph(X, Y), %s, legend="%s")'
-                          % (picture, pen, legend))
-        else:
-            self.asy.send('draw(%s, graph(X, Y), %s)'
-                          % (picture, pen))
+            if legend.find('"') >= 0:
+                command = command + (', legend=%s' % legend)
+            else:
+                command = command + (', legend="%s"' % legend)
+
+        if marker is not None:
+            command = command + (', marker=%s' % marker)
+
+        command = command + ')'
+
+        self.asy.send(command)
+
+
+    ##################################################################
+
+    def bar(self, x, y, pen=None, legend=None, marker=None, **kwargs):
+        """Bar plot of *y* vs *x* (both of which should be 1d
+           ndarrays).
+
+           **Arguments**
+
+           * *x*: Horizontal coordinates of data points.
+           * *y*: Vertical coordinates of data points.
+           * *pen*: Asymptote pen (array or '+' delimited string).
+             Defaults to *plotpen*.
+           * *legend*: Asymptote legend key
+             (see :func:`pyasy.plot.Plot.legend`).
+
+           """
+
+        picture = self._picture(**kwargs)
+        pen = self._pen(pen, **kwargs)
+
+        self._filter_and_slurp2(x, y)
+
+        command = 'draw(%s, graph(X, Y), %s' % (picture, pen)
+
+        if legend is not None:
+            if legend.find('"') >= 0:
+                command = command + (', legend=%s' % legend)
+            else:
+                command = command + (', legend="%s"' % legend)
+
+        if marker is not None:
+            command = command + (', marker=%s' % marker)
+
+        command = command + ')'
+
+        self.asy.send(command)
+
 
     ##################################################################
 
@@ -347,7 +398,10 @@ class Plot(base.Base):
 
     ##################################################################
 
-    def legend(self, position=None, direction=None, **kwargs):
+    def legend(self, position=None, direction=None,
+               perline=1, length='legendlinelength',
+               legends=[],
+               frame=False, **kwargs):
         """Draw a legend.
 
            **Arguments**
@@ -359,22 +413,47 @@ class Plot(base.Base):
 
         picture = self._picture(**kwargs)
 
-        if position is None:
-            position = 'point(E)'
+        if legends:
+            self.asy.send(
+                '''%(pic)s.legend = new Legend[] { %(legend)s }'''
+                % { 'pic': picture,
+                    'legend': ','.join(legends) })
 
-        if direction is None:
-            direction = '10E'
+        if not frame:
 
-        self.asy.send('''add(%(pic)s, legend(%(pic)s),
-                         %(position)s, %(direction)s, UnFill)'''
-                      % {'pic': picture,
-                         'position': position,
-                         'direction': direction })
+            if position is None:
+                position = 'point(E)'
+
+            if direction is None:
+                direction = '10E'
+
+            self.asy.send('''add(%(pic)s, legend(%(pic)s,
+                             %(perline)d, linelength=%(length)s),
+                             %(position)s, %(direction)s)'''
+                          % {'pic': picture,
+                             'perline': perline,
+                             'length': str(length),
+                             'position': position,
+                             'direction': direction })
+        else:
+            self.asy.send('''frame %(frame)s = legend(%(pic)s,
+                             %(perline)d, linelength=%(length)s)'''
+                          % {'pic': picture,
+                             'frame': frame,
+                             'perline': perline,
+                             'length': str(length), })
+
+
+        # self.asy.send('''add(%(pic)s, legend(%(pic)s),
+        #                  %(position)s, %(direction)s, UnFill)'''
+        #               % {'pic': picture,
+        #                  'position': position,
+        #                  'direction': direction })
 
 
     ##################################################################
 
-    def new_plot(self, size=(4,4,False), shift=(0,0)):
+    def new_plot(self, size=None, shift=(0,0)):
         """Create a new subplot.
 
            **Arguments**
@@ -384,8 +463,12 @@ class Plot(base.Base):
 
            """
 
+        if size is None:
+            size = self.size
+
         self.plots.append({'size': size, 'shift': shift})
         self.picture = self.picture + 1
+        self.asy.send('picture p%d' % (self.picture))
         self.asy.send('picture p%d' % (self.picture))
 
 
@@ -451,7 +534,7 @@ class Plot(base.Base):
                     '''\
                     \\begin{figure}
                       \\centering
-                      \\includegraphics[%(options)s]{plots/%(basename)s}
+                      \\includegraphics[%(options)s]{figures/%(basename)s}
                       \\caption{%(caption)s}
                       \\label{%(label)s}
                     \\end{figure}
@@ -465,7 +548,7 @@ class Plot(base.Base):
                     '''\
                     \\begin{figure}
                       \\centering
-                      \\includegraphics{plots/%(basename)s}
+                      \\includegraphics{figures/%(basename)s}
                       \\caption{%(caption)s}
                       \\label{%(label)s}
                     \\end{figure}

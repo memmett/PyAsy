@@ -33,8 +33,8 @@ class Asymptote(object):
                       X = new real[N];
                       Y = new real[N];
 
-                      X[:] = dimension(dat, N);
-                      Y[:] = dimension(dat, N);
+                      X[:] = dat.dimension(N);
+                      Y[:] = dat.dimension(N);
 
                       close(dat);
                     }"""
@@ -50,9 +50,9 @@ class Asymptote(object):
                       Z = new real[N*M];
                       ZZ = new real[N][M];
 
-                      X[:] = dimension(dat, N);
-                      Y[:] = dimension(dat, M);
-                      Z[:] = dimension(dat, N*M);
+                      X[:] = dat.dimension(N);
+                      Y[:] = dat.dimension(M);
+                      Z[:] = dat.dimension(N*M);
 
                       for (int i=0; i<X.length; ++i)
                         for (int j=0; j<Y.length; ++j)
